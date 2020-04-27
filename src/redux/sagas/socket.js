@@ -1,7 +1,15 @@
 import io from "socket.io-client";
 import { eventChannel } from "redux-saga";
 import { fork, take, call, put, cancel } from "redux-saga/effects";
-import { newRoll, submitRoll, login, logout, newEvent } from "../actions";
+import {
+  newRoll,
+  submitRoll,
+  login,
+  logout,
+  newEvent,
+  characterUpdated,
+  updateCharacter,
+} from "../actions";
 
 function connect() {
   const socket = io("http://localhost:3000");
@@ -35,7 +43,12 @@ function setup(socket) {
     });
 
     socket.on("connection.new", ({ who }) => {
-      emit(newEvent({ type: "connection", content: { who } }));
+      emit(newEvent({ type: "connected", content: { who } }));
+    });
+
+    socket.on("character.updated", ({ charId, who, newAttrs, diff }) => {
+      emit(newEvent({ type: "character.updated", content: { who, diff } }));
+      emit(characterUpdated({ charId, newAttrs }));
     });
 
     return () => {};
@@ -57,9 +70,18 @@ function* rollSubmit(socket) {
   }
 }
 
+function* characterUpdateSubmit(socket) {
+  while (true) {
+    const { payload } = yield take([`${updateCharacter}`]);
+    console.log("EMITTING UPDATE", payload);
+    socket.emit("character.update", payload);
+  }
+}
+
 function* handleIO(socket) {
   yield fork(read, socket);
   yield fork(rollSubmit, socket);
+  yield fork(characterUpdateSubmit, socket);
 }
 
 function* flow() {

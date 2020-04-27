@@ -27,7 +27,12 @@ const Dashboard = ({ characters, currentUser }) => {
         <Stage className="stage" hasDicesToRoll />
         {currentChar ? (
           <Frame className="status" title="Status">
-            <PlayerProfile playerData={currentChar} full editable />
+            <PlayerProfile
+              charId={currentUser.charId}
+              playerData={currentChar}
+              full
+              editable
+            />
           </Frame>
         ) : (
           <p className="status message">
@@ -43,6 +48,7 @@ const Dashboard = ({ characters, currentUser }) => {
               ? party.map(([charId, charData], k) => (
                   <Frame className="player inset clickable" key={k}>
                     <PlayerProfile
+                      charId={charId}
                       playerData={charData}
                       minimized={playerExpanded !== charId}
                       onClick={() =>

@@ -11,6 +11,7 @@ import {
   login,
   logout,
   newEvent,
+  characterUpdated,
 } from "./actions";
 
 const initial = {
@@ -60,6 +61,8 @@ const feed = createReducer(
 const characters = createReducer(
   {
     [login]: (state, { characters }) => characters,
+    [characterUpdated]: (state, { charId, newAttrs }) =>
+      dotProp.set(state, charId, newAttrs),
   },
   initial.characters
 );

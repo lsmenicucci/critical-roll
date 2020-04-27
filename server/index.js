@@ -29,17 +29,17 @@ io.on("connection", (client) => {
 
   client.on("session.setCharacter", ({ charKey }) => {
     // load master
-    if (Session.isMaster(db, client.id)) {
-      const characters = Character(db).getAll();
+    if (Session.isMaster(db, charKey)) {
+      const characters = Character.getAll(db);
       return client.emit({ characters, isMaster: true, charId: null });
     }
 
     // load character
-    const loggedChar = Character(db).loadCharacter(charKey);
+    const loggedChar = Character.loadCharacter(db, charKey);
     const { id: charId } = loggedChar;
 
     if (charId) {
-      const characters = Character(db).getAll();
+      const characters = Character.getAll(db);
       session.setCharacter(charId);
       client.emit("session.data", {
         charId,
@@ -59,6 +59,20 @@ io.on("connection", (client) => {
 
   client.on("roll.request", ({ charId }) => {
     console.log("not implemented :c");
+  });
+
+  client.on("character.update", ({ charId, newAttrs }) => {
+    const editingChar = new Character(db, charId);
+
+    // set new attrs
+    const diff = editingChar.setAttributes(newAttrs);
+
+    io.emit("character.updated", {
+      charId,
+      who: editingChar.name,
+      newAttrs,
+      diff,
+    });
   });
 
   client.on("disconnect", () => {

@@ -3,6 +3,11 @@ import React, { useReducer } from "react";
 import classNames from "classnames";
 import dotProp from "dot-prop-immutable";
 import { updatedDiff } from "deep-object-diff";
+import { connect } from "react-redux";
+
+// settings & actions
+import DISPLAY_PROPS from "../config/attr-display-props";
+import { updateCharacter } from "../redux/actions";
 
 // local components
 import Status from "./Status";
@@ -17,14 +22,16 @@ const updateStatusReducer = (playerData, nextStatus) => {
 };
 
 // Define some display props
-const DISPLAY_PROPS = {
-  forca: { name: "Força", icon: "ra ra-muscle-up" },
-  agilidade: { name: "Agilidade", icon: "ra ra-player-dodge" },
-  vontade: { name: "Vontade", icon: "ra ra-player-pyromaniac" },
-  inteligencia: { name: "Inteligencia", icon: "ra ra-aware" },
-};
 
-const PlayerProfile = ({ minimized, full, playerData, editable, onClick }) => {
+const PlayerProfile = ({
+  minimized,
+  full,
+  playerData,
+  charId,
+  editable,
+  onClick,
+  dispatch,
+}) => {
   const [localPlayerData, dispatchPlayerUpdate] = useReducer(
     updateStatusReducer,
     playerData
@@ -33,6 +40,7 @@ const PlayerProfile = ({ minimized, full, playerData, editable, onClick }) => {
   const statsDiff = updatedDiff(localPlayerData, playerData);
   const hasChanged = Object.keys(statsDiff).length > 0;
 
+  console.log(statsDiff);
   return (
     <div
       className={classNames("player-profile", { resumed: !full, minimized })}
@@ -103,9 +111,20 @@ const PlayerProfile = ({ minimized, full, playerData, editable, onClick }) => {
             )
           : ""}
       </div>
-      {editable && hasChanged ? <button className="light">Salvar</button> : ""}
+      {editable && hasChanged ? (
+        <button
+          className="light"
+          onClick={() =>
+            dispatch(updateCharacter({ charId, newAttrs: localPlayerData }))
+          }
+        >
+          Salvar
+        </button>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
 
-export default PlayerProfile;
+export default connect()(PlayerProfile);

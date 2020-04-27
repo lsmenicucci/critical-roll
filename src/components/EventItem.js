@@ -2,6 +2,9 @@
 import React from "react";
 import classNames from "classnames";
 
+// settings
+import DISPLAY_PROPS from "../config/attr-display-props";
+
 // local styles
 import "../styles/components/event-item.scss";
 
@@ -10,29 +13,55 @@ const EventItem = ({ className, event }) => {
 
   // init events
   let eventIconClass = "";
-  let eventTitle = "";
+  let makeTitle = () => "";
 
   if (event.type === "roll") {
     eventIconClass = "ra ra-dice-five";
-    eventTitle =
-      dices && dices.length === 1
-        ? " rolou um dado"
-        : ` rolou ${dices && dices.length} dados`;
+    makeTitle = () => (
+      <div className="event-title">
+        <span className="event-who">{event.content.who}</span>
+        {dices && dices.length === 1
+          ? " rolou um dado"
+          : ` rolou ${dices && dices.length} dados`}
+      </div>
+    );
   }
 
-  if (event.type === "connection") {
-    eventIconClass = "";
-    eventTitle = " acabou de se juntar a nós.";
+  if (event.type === "connected") {
+    eventIconClass = "ra ra-player";
+    makeTitle = () => (
+      <div className="event-title">
+        <span className="event-who">{event.content.who}</span>
+        {" acabou de se juntar a nós."}
+      </div>
+    );
   }
-  console.log(event.type, eventIconClass, eventTitle);
+
+  if (event.type === "disconnected") {
+    eventIconClass = "ra ra-falling";
+    makeTitle = () => (
+      <div className="event-title">
+        <span className="event-who">{event.content.who}</span>
+        {" foi de base o/"}
+      </div>
+    );
+  }
+
+  if (event.type === "character.updated") {
+    eventIconClass = "ra ra-falling";
+    makeTitle = () => (
+      <div className="event-title">
+        <span className="event-who">{event.content.who}</span>
+        {" teve os atributos atualizados"}
+      </div>
+    );
+  }
+  console.log(event.content.diff);
 
   return (
     <div className={classNames("event-item", className)}>
       <i className={classNames("event-icon", eventIconClass)} />
-      <div className="event-title">
-        <span className="event-who">{event.content.who}</span>
-        {eventTitle}
-      </div>
+      {makeTitle()}
       {event.type === "roll" ? (
         <div className="event-dice-list">
           {dices &&
@@ -42,6 +71,21 @@ const EventItem = ({ className, event }) => {
                 <span className="dice-limit">{`(d${dice.limit})`}</span>
               </div>
             ))}
+        </div>
+      ) : (
+        ""
+      )}
+      {event.type === "character.updated" ? (
+        <div className="event-attr-change-list">
+          {Object.entries(event.content.diff).map(([attrId, value], k) => (
+            <div className="attr-change" key={k}>
+              <span className="attr-name">{DISPLAY_PROPS[attrId].name}:</span>
+              <span className="attr-change-value">
+                <span className="attr-value">{value.old}</span> ->{" "}
+                <span className="attr-value">{value.new}</span>
+              </span>
+            </div>
+          ))}
         </div>
       ) : (
         ""

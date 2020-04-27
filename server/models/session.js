@@ -38,8 +38,8 @@ class Session {
     store.get(SESSIONS_ROOT).remove({ id: socketId }).write();
   }
 
-  static isMaster(store, socketId) {
-    return store.get(MASTER_KEY_ROOT).value() === socketId;
+  static isMaster(store, masterKey) {
+    return store.get(MASTER_KEY_ROOT).value() === masterKey;
   }
 }
 
