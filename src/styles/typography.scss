@@ -1,0 +1,17 @@
+@font-face {
+  font-family: "7x7 Pixelized";
+  src: local("7x7 Pixelized"),
+    url("../assets/fonts/7X7PixelizedRegular-35wp.ttf");
+}
+
+@font-face {
+  font-family: "Monogram";
+  src: local("Monogram"), url("../assets/fonts/monogram.ttf");
+}
+
+* {
+  text-rendering: geometricPrecision;
+  font-family: "Monogram";
+  font-size: 32px;
+  color: #242923;
+}

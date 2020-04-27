@@ -1,0 +1,50 @@
+@import "../colors.scss";
+
+.mainContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.frame {
+  border: 1.1px $grey-2 solid;
+  box-shadow: 3px 3px $black;
+  border-radius: 4px;
+  display: flex;
+  flex-flow: column;
+  background-color: $purple;
+  padding: 0.1rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &.inset {
+    box-shadow: none;
+  }
+
+  &.clickable.inset:hover {
+    cursor: pointer;
+    box-shadow: 3px 3px $black;
+    transform: translate(-3px, -3px);
+  }
+
+  &.highlighted {
+    background-color: $red;
+    border-color: $dark-red;
+    color: $white-2;
+
+    > .frame.inset {
+      border: 1.1px $dark-red solid;
+    }
+  }
+
+  .header {
+    box-sizing: border-box;
+    border: 1px $grey-2 solid;
+    background-color: $white-2;
+    border-radius: 4px;
+    display: flex;
+    padding: 0.1rem 0.3rem;
+  }
+
+  .inner {
+    display: flex;
+  }
+}

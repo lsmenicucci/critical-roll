@@ -1,0 +1,48 @@
+@import "../mixins.scss";
+@import "../animations.scss";
+
+.events-feed {
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.1rem;
+
+  & > * {
+    @include custom-scroll;
+    overflow-x: hidden;
+
+    & > *:not(:last-child) {
+      border-bottom: 0.02rem rgba($grey-2, $alpha: 0.5) solid;
+    }
+    & > * {
+      animation-name: insertFromRight;
+      animation-duration: 1s;
+      animation-timing-function: ease;
+    }
+  }
+
+  .jump-to-bottom-button {
+    background-color: transparent;
+    height: 0;
+
+    &::before {
+      content: "Para baixo";
+      white-space: nowrap;
+      position: absolute;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.2rem;
+      background-color: $red;
+      border-radius: 4px;
+      width: fit-content;
+      transform: translate(-100%, -100%);
+    }
+    &:hover {
+      box-shadow: none;
+      transform: none;
+    }
+  }
+
+  .event-item {
+    padding: 0.25rem 0.5rem;
+  }
+}

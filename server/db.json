@@ -1,0 +1,94 @@
+{
+  "characters": {
+    "rudy": {
+      "name": "Rudy",
+      "supname": "The green ninja",
+      "stats": {
+        "level": 3,
+        "vida": 5,
+        "vidaMaxima": 15,
+        "sorte": 7,
+        "atributos": {
+          "forca": 10,
+          "agilidade": 11,
+          "vontade": 9,
+          "inteligencia": 9
+        }
+      }
+    },
+    "skarp": {
+      "name": "Iscarpi",
+      "supname": "O guerreiro não tão inteligente",
+      "stats": {
+        "level": 3,
+        "vida": 5,
+        "vidaMaxima": 12,
+        "sorte": 5,
+        "atributos": {
+          "forca": 17,
+          "agilidade": 11,
+          "vontade": 9,
+          "inteligencia": 9
+        }
+      }
+    },
+    "alater": {
+      "name": "Alatar",
+      "supname": "O guerreiro não tão inteligente",
+      "stats": {
+        "level": 3,
+        "vida": 5,
+        "vidaMaxima": 12,
+        "sorte": 5,
+        "atributos": {
+          "forca": 17,
+          "agilidade": 11,
+          "vontade": 9,
+          "inteligencia": 9
+        }
+      }
+    },
+    "elendil": {
+      "name": "Elendil",
+      "supname": "O guerreiro não tão inteligente",
+      "stats": {
+        "level": 3,
+        "vida": 5,
+        "vidaMaxima": 12,
+        "sorte": 5,
+        "atributos": {
+          "forca": 17,
+          "agilidade": 11,
+          "vontade": 9,
+          "inteligencia": 9
+        }
+      }
+    },
+    "lucky": {
+      "name": "Lucky",
+      "supname": "O guerreiro não tão inteligente",
+      "stats": {
+        "level": 3,
+        "vida": 5,
+        "vidaMaxima": 12,
+        "sorte": 5,
+        "atributos": {
+          "forca": 17,
+          "agilidade": 11,
+          "vontade": 9,
+          "inteligencia": 9
+        }
+      }
+    }
+  },
+  "sessions": [
+    {
+      "id": "jmfaJkmBv9XMz06BAAAM",
+      "charId": "rudy"
+    }
+  ],
+  "charKeyRotation": {
+    "123": "rudy"
+  },
+  "masterKey": "master-secret-key"
+}

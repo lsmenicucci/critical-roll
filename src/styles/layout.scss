@@ -1,0 +1,210 @@
+@import "./colors.scss";
+@import "./mixins.scss";
+@import "./animations.scss";
+
+.dashboard-container {
+  width: 100%;
+  height: 100%;
+}
+.dashboard {
+  align-content: stretch;
+  justify-items: stretch;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: calc(100% - 420px - 2rem) 420px;
+  grid-template-areas:
+    "stage status"
+    "feed party";
+  height: 100%;
+  width: 100%;
+
+  & > * {
+    margin: 1rem;
+  }
+
+  .stage {
+    grid-area: stage;
+  }
+
+  .status {
+    grid-area: status;
+
+    &:not(.message) {
+      animation-name: appearFromRight;
+      animation-timing-function: ease;
+      animation-duration: 0.5s;
+    }
+  }
+
+  .feed {
+    grid-area: feed;
+  }
+
+  .party {
+    grid-area: party;
+  }
+}
+
+.player-profile {
+  @include custom-scroll;
+
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  flex-grow: 1;
+  padding-bottom: 0.2rem;
+  overflow: auto;
+
+  &.resumed {
+    .player-title {
+      width: 100%;
+      .player-name {
+        font-size: 1rem;
+      }
+
+      .player-supname {
+        font-size: 0.75rem;
+      }
+    }
+  }
+  &.minimized {
+    padding-bottom: 0.1rem;
+    .player-title {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 0.2rem;
+    }
+    .status-list {
+      .status-frame {
+        .status-icon,
+        .status-label,
+        .status-value {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .player-title {
+    align-content: start;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+    .player-name {
+      font-size: 1.25rem;
+      padding: 0 0.5rem;
+    }
+
+    .player-supname {
+      padding: 0 0.5rem;
+      color: $grey-1;
+      font-style: italic;
+      font-size: 1rem;
+      width: 100%;
+    }
+  }
+
+  .status-list {
+    width: 100%;
+  }
+}
+
+.status,
+.player {
+  display: flex;
+  flex-flow: column;
+
+  .status-frame {
+    align-items: baseline;
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    padding: 0.25rem 0.5rem;
+    width: 100%;
+
+    &:not(:last-child) {
+      border-bottom: 0.02rem rgba($grey-2, $alpha: 0.5) solid;
+    }
+    .status-icon {
+      font-size: 0.5rem;
+      margin-right: 0.1rem;
+      width: 0.5rem;
+    }
+    .status-label {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.75rem;
+      width: calc(60% - 0.5rem);
+    }
+
+    .status-value {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: right;
+      font-size: 1rem;
+      width: 35%;
+
+      .editable-value {
+        font-size: 1rem;
+        text-align: center;
+        width: 1.5rem;
+        background-color: transparent;
+        outline: 0;
+        border: none;
+      }
+    }
+
+    .status-bar {
+      width: 100%;
+    }
+  }
+}
+
+.party {
+  .player-list {
+    @include custom-scroll;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    padding: 0.2rem 0.1rem;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    .player {
+      margin-bottom: 0.2rem;
+    }
+  }
+}
+
+.stage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.connection-bar {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: $black;
+  color: $white;
+  font-size: 0.8rem;
+  height: 1rem;
+  position: fixed;
+  padding: 0.2rem;
+  width: 100%;
+  transition: transform 0.5s ease;
+
+  &.hidden {
+    transform: translateY(100%);
+  }
+}
