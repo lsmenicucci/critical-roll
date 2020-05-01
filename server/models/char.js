@@ -19,36 +19,20 @@ class Character {
     return char && char.name;
   }
 
-  setAttributes(newAttrs) {
-    const { stats: oldStats } = this.get();
+  setAttributes(newData) {
+    const { attrs: oldAttrs } = this.get();
 
     // get diff
-    const statsDiff = updatedDiff(oldStats, newAttrs.stats);
-    let planDiff = {};
+    const attrsDiff = updatedDiff(oldAttrs, newData.attrs);
+    const oldNewDiff = {};
 
-    // format diff
-    if (statsDiff && statsDiff.atributos) {
-      Object.keys(statsDiff.atributos).forEach((attrId) => {
-        planDiff[attrId] = {
-          old: oldStats.atributos[attrId],
-          new: statsDiff.atributos[attrId],
-        };
-      });
-    }
-
-    Object.keys(statsDiff)
-      .filter((attrId) => attrId !== "atributos")
-      .forEach((attrId) => {
-        planDiff[attrId] = {
-          old: oldStats[attrId],
-          new: statsDiff[attrId],
-        };
-      });
+    Object.keys(attrsDiff).forEach((k) => {
+      oldNewDiff[k] = { old: oldAttrs[k], new: newData.attrs[k] };
+    });
 
     // update storage
-    this.store.get(`${CHARS_ROOT}.${this.id}`).assign(newAttrs).write();
-
-    return planDiff;
+    this.store.get(`${CHARS_ROOT}.${this.id}`).assign(newData).write();
+    return oldNewDiff;
   }
 
   get() {

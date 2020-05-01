@@ -56,8 +56,6 @@ const EventItem = ({ className, event }) => {
       </div>
     );
   }
-  console.log(event.content.diff);
-
   return (
     <div className={classNames("event-item", className)}>
       <i className={classNames("event-icon", eventIconClass)} />
@@ -79,7 +77,9 @@ const EventItem = ({ className, event }) => {
         <div className="event-attr-change-list">
           {Object.entries(event.content.diff).map(([attrId, value], k) => (
             <div className="attr-change" key={k}>
-              <span className="attr-name">{DISPLAY_PROPS[attrId].name}:</span>
+              <span className="attr-name">
+                {DISPLAY_PROPS[attrId].displayName}:
+              </span>
               <span className="attr-change-value">
                 <span className="attr-value">{value.old}</span> ->{" "}
                 <span className="attr-value">{value.new}</span>

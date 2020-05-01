@@ -6,6 +6,39 @@
   width: 100%;
   height: 100%;
 }
+
+.master-dashboard {
+  align-content: stretch;
+  justify-items: stretch;
+  display: grid;
+  grid-template-rows: 65% 35%;
+  grid-template-areas:
+    "actions-card"
+    "feed";
+  height: 100%;
+  width: 100%;
+
+  & > * {
+    margin: 1rem;
+  }
+
+  .actions-card {
+    grid-area: actions-card;
+    .editable-char {
+      box-sizing: border-box;
+      flex: 1;
+      overflow-y: hidden;
+
+      .player-profile {
+        padding: 0.2rem;
+      }
+    }
+  }
+  .feed {
+    grid-area: feed;
+  }
+}
+
 .dashboard {
   align-content: stretch;
   justify-items: stretch;
@@ -28,12 +61,6 @@
 
   .status {
     grid-area: status;
-
-    &:not(.message) {
-      animation-name: appearFromRight;
-      animation-timing-function: ease;
-      animation-duration: 0.5s;
-    }
   }
 
   .feed {
@@ -67,21 +94,13 @@
       }
     }
   }
-  &.minimized {
+  &.minified {
+    font-size: 13px;
     padding-bottom: 0.1rem;
     .player-title {
       display: flex;
       justify-content: space-between;
       padding-bottom: 0.2rem;
-    }
-    .status-list {
-      .status-frame {
-        .status-icon,
-        .status-label,
-        .status-value {
-          display: none;
-        }
-      }
     }
   }
 
@@ -104,6 +123,9 @@
       width: 100%;
     }
   }
+  .save-button {
+    align-self: flex-end;
+  }
 
   .status-list {
     width: 100%;
@@ -111,9 +133,14 @@
 }
 
 .status,
-.player {
+.player,
+.player-profile {
   display: flex;
   flex-flow: column;
+
+  &.hidden {
+    display: none;
+  }
 
   .status-frame {
     align-items: baseline;
@@ -143,10 +170,10 @@
     .status-value {
       display: inline-flex;
       align-items: center;
+      flex: 1;
       justify-content: flex-end;
       text-align: right;
       font-size: 1rem;
-      width: 35%;
 
       .editable-value {
         font-size: 1rem;
@@ -164,21 +191,19 @@
   }
 }
 
-.party {
-  .player-list {
-    @include custom-scroll;
+.player-list {
+  @include custom-scroll;
 
-    box-sizing: border-box;
-    display: flex;
-    flex-flow: column;
-    justify-content: flex-start;
-    padding: 0.2rem 0.1rem;
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-    .player {
-      margin-bottom: 0.2rem;
-    }
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  padding: 0.2rem 0.1rem;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  .player {
+    margin-bottom: 0.2rem;
   }
 }
 

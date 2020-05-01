@@ -9,15 +9,13 @@ import "../styles/components/dice-frame.scss";
 // get local actions
 import { updateRoll } from "../redux/actions";
 
-const DiceFrame = ({ currentRoll, autoRoll, rollId, dispatch }) => {
-  const { limit } = currentRoll.dices[rollId];
+const DiceFrame = ({ rolls, autoRoll, rollId, diceId, dispatch }) => {
+  const currentRoll = rolls.find((r) => rollId === r.rollId);
+  const { limit } = currentRoll.dices[diceId];
 
   const [diceValue, setDiceValue] = useState();
   const [isRolling, setRollingState] = useState();
   const [hasRolled, setRolled] = useState();
-
-  const getRandValue = (from, to) =>
-    from + Math.floor(Math.random() * (to - from + 1));
 
   const roll = async () => {
     if (!isRolling) {
@@ -35,9 +33,12 @@ const DiceFrame = ({ currentRoll, autoRoll, rollId, dispatch }) => {
 
       // dispatch roll
       const updatedRoll = currentRoll;
-      updatedRoll.dices[rollId].value = newValue;
+      updatedRoll.dices[diceId].value = newValue;
+      updatedRoll.allRolled = updatedRoll.dices.every(
+        ({ value }) => value !== undefined
+      );
 
-      dispatch(updateRoll(updatedRoll));
+      dispatch(updateRoll({ rollId, updatedRoll }));
     }
   };
 
@@ -55,9 +56,6 @@ const DiceFrame = ({ currentRoll, autoRoll, rollId, dispatch }) => {
     </div>
   );
 };
-
-const stateToProps = ({ stage: { currentRoll } }) => {
-  return { currentRoll };
-};
+const stateToProps = ({ rolls }) => ({ rolls });
 
 export default connect(stateToProps)(DiceFrame);

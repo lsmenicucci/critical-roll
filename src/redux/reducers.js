@@ -4,67 +4,124 @@ import { createReducer } from "redux-act";
 import dotProp from "dot-prop-immutable";
 
 // import local actions
-import {
-  submitRoll,
-  newRoll,
-  updateRoll,
-  login,
-  logout,
-  newEvent,
-  characterUpdated,
-} from "./actions";
+import * as actions from "./actions";
 
 const initial = {
-  currentUser: null,
-  stage: {
-    currentRoll: null,
-    currentTurn: null,
+  connection: {
+    connected: false,
+    connecting: false,
+    reconnecting: false,
+    connectionError: false,
+    url: "",
   },
+  currentUser: { error: false, loading: false, loaded: false },
+  rolls: [],
   users: {},
   characters: {},
   feed: [],
 };
 
+const connection = createReducer(
+  {
+    [actions.reconnecting]: (connection) => ({
+      ...connection,
+      reconnecting: true,
+      connectionError: false,
+    }),
+    [actions.connecting]: (connection) => ({
+      ...connection,
+      connecting: true,
+      connectionError: false,
+    }),
+    [actions.connected]: (connection, action) => ({
+      ...connection,
+      url: action.url,
+      connected: true,
+      connecting: false,
+      reconnecting: false,
+    }),
+    [actions.connectionError]: (connection, action) => ({
+      ...connection,
+      url: action.url,
+      connected: false,
+      connecting: false,
+      reconnecting: false,
+      connectionError: true,
+    }),
+  },
+  initial.connection
+);
+
 const currentUser = createReducer(
   {
-    [login]: (state, { charId, isMaster }) => ({ charId, isMaster }),
-    [logout]: (state, payload) => {
-      return null;
-    },
+    [actions.sessionLoaded]: (state, { charId, isMaster }) => ({
+      ...state,
+      charId,
+      isMaster,
+      loaded: true,
+      error: false,
+      loading: false,
+    }),
+    [actions.sessionError]: (currentUser, _) => ({
+      ...currentUser,
+      loading: false,
+      error: true,
+    }),
+    [actions.loadingSession]: (currentUser, _) => ({
+      ...currentUser,
+      loading: true,
+      error: false,
+    }),
   },
   initial.currentUser
 );
 
-const stage = createReducer(
-  {
-    [submitRoll]: (stage) => dotProp.set(stage, "currentRoll", null),
-    [newRoll]: (stage, currentRoll) =>
-      dotProp.set(stage, "currentRoll", currentRoll),
-    [updateRoll]: (stage, updatedRoll) => ({
-      ...stage,
-      currentRoll: {
-        ...updatedRoll,
-        allRolled: updatedRoll.dices.every((dice) => dice.value),
-      },
-    }),
-  },
-  initial.stage
-);
-
 const feed = createReducer(
   {
-    [newEvent]: (feed, event) => [...feed, event],
+    [actions.newEvent]: (feed, event) => [...feed, event],
   },
   initial.feed
 );
 
 const characters = createReducer(
   {
-    [login]: (state, { characters }) => characters,
-    [characterUpdated]: (state, { charId, newAttrs }) =>
-      dotProp.set(state, charId, newAttrs),
+    [actions.sessionLoaded]: (state, { characters }) => characters,
+    [actions.characterUpdated]: (state, { charId, newData }) => ({
+      ...state,
+      [charId]: newData,
+    }),
   },
   initial.characters
 );
 
-export default combineReducers({ stage, feed, currentUser, characters });
+const rolls = createReducer(
+  {
+    [actions.sessionLoaded]: (rollList, { rolls }) => rolls || [],
+
+    [actions.newRoll]: (rollList, newRoll) => [...rollList, newRoll],
+
+    [actions.updateRoll]: (rollList, { rollId, diceIndex, diceValue }) =>
+      rollList.map((r) => {
+        if (r.rollId !== rollId) return r;
+
+        const newRoll = dotProp.set(r, `dices.${diceIndex}.value`, diceValue);
+        if (newRoll.dices.every((d) => d.value)) newRoll.allRolled = true;
+        return newRoll;
+      }),
+
+    [actions.submitRoll]: (rollList, { rollId }) =>
+      rollList.filter((r) => {
+        console.log(r.rollId, rollId);
+        return r.rollId !== rollId;
+      }),
+  },
+  initial.rolls
+);
+
+export default combineReducers({
+  feed,
+  currentUser,
+  characters,
+  connection,
+  rolls,
+});

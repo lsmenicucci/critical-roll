@@ -8,7 +8,7 @@ import "../styles/layout.scss";
 
 // import local components
 import Frame from "../components/Frame";
-import PlayerProfile from "../components/PlayerProfile";
+import CharacterCard from "../components/Card/CharacterCard";
 import Stage from "../components/Stage";
 import EventsFeed from "../components/EventsFeed";
 
@@ -27,12 +27,7 @@ const Dashboard = ({ characters, currentUser }) => {
         <Stage className="stage" hasDicesToRoll />
         {currentChar ? (
           <Frame className="status" title="Status">
-            <PlayerProfile
-              charId={currentUser.charId}
-              playerData={currentChar}
-              full
-              editable
-            />
+            <CharacterCard charId={currentUser.charId} />
           </Frame>
         ) : (
           <p className="status message">
@@ -47,10 +42,10 @@ const Dashboard = ({ characters, currentUser }) => {
             {party.length > 0
               ? party.map(([charId, charData], k) => (
                   <Frame className="player inset clickable" key={k}>
-                    <PlayerProfile
+                    <CharacterCard
                       charId={charId}
-                      playerData={charData}
-                      minimized={playerExpanded !== charId}
+                      charAttrs={charData}
+                      minified={playerExpanded !== charId}
                       onClick={() =>
                         setPlayerExpander(
                           playerExpanded !== charId ? charId : null

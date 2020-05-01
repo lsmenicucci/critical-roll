@@ -10,15 +10,14 @@ import "./styles/typography.scss";
 import setupStore from "./redux/store";
 
 // import pages
-import LoginPage from "./pages/Login";
-import DashboardPage from "./pages/Dashboard";
+import Main from "./pages/Main";
 
-function App() {
+const App = () => {
   return (
     <Provider store={setupStore()}>
-      <DashboardPage />
+      <Main />
     </Provider>
   );
-}
+};
 
 export default App;
