@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "yoster";
+  src: url("../assets/fonts/yoster.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  letter-spacing: 0.2rem;
+}

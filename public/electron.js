@@ -1,33 +1,32 @@
+// import electron
 const electron = require("electron");
 const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const actions = require("../src/shared/actions");
 
-const path = require("path");
-const isDev = require("electron-is-dev");
+// import util & dev-tools
 
-let mainWindow;
+const {
+  default: installExtension,
+  REDUX_DEVTOOLS,
+} = require("electron-devtools-installer");
 
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1366,
-    height: 768,
-    "min-height": 1366,
-    "min-width": 768,
-  });
-  mainWindow.loadURL(
-    isDev
-      ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../build/index.html")}`
-  );
-  if (isDev) {
-    // Open the DevTools.
-    //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
-    mainWindow.webContents.openDevTools();
-  }
-  mainWindow.on("closed", () => (mainWindow = null));
-}
+// import redux
+const setupStore = require("./redux/store");
 
-app.on("ready", createWindow);
+const store = setupStore();
+
+// install some dev tools
+app.whenReady().then(() => {
+  console.log("Installing devtools extensions");
+  installExtension(REDUX_DEVTOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log("An error occurred: ", err));
+});
+
+// setup app
+app.on("ready", () => {
+  store.dispatch(actions.openView({ name: "main" }));
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -36,7 +35,6 @@ app.on("window-all-closed", () => {
 });
 
 app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindow();
+  if (appWindows.login === null) {
   }
 });

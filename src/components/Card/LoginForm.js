@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { colors as themeColors } from "../../config/theme";
 
 // import redux actions
-import * as actions from "../../redux/actions";
+import actions from "../../shared/actions";
 
 // import local components
 import TextField from "../Form/TextField";
@@ -29,6 +29,10 @@ const FormTextField = styled(TextField)`
 
 const SubmitButton = styled(Button)`
   align-self: flex-end;
+`;
+
+const ErrorMessage = styled.span`
+  font-size: 0.75rem;
 `;
 
 const LoginForm = ({ connection, currentUser, dispatch }) => {
@@ -83,8 +87,16 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
           ? "Carregar personagem"
           : "Conectar"}
       </SubmitButton>
-      {connection.connectionError ? "Falha ao conectar no servidor :T" : ""}
-      {currentUser.error ? "Chave de personagem invalida" : ""}
+      {connection.connectionError ? (
+        <ErrorMessage>Falha ao conectar no servidor :T</ErrorMessage>
+      ) : (
+        ""
+      )}
+      {currentUser.error ? (
+        <ErrorMessage>Chave de personagem invalida</ErrorMessage>
+      ) : (
+        ""
+      )}
     </LoginFormContainer>
   );
 };

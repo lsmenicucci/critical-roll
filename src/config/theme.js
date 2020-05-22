@@ -1,3 +1,5 @@
+import { hsla, linearGradient, hslToColorString } from "polished";
+
 // colors
 export const colors = {
   black: "#242923",
@@ -14,3 +16,9 @@ export const colors = {
 export const layout = {
   borderRadius: "4px",
 };
+
+export const font = {
+  family: "yoster",
+};
+
+export default { colors, layout, font };

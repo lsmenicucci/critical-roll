@@ -4,8 +4,8 @@
       "name": "Rudy",
       "supname": "The green ninja",
       "attrs": {
-        "level": 4,
-        "vida": 15,
+        "level": 3,
+        "vida": 18,
         "vidaMaxima": 19,
         "sorte": 8,
         "forca": 10,
@@ -15,81 +15,89 @@
       }
     },
     "skarp": {
-      "name": "Iscarpi",
-      "supname": "O guerreiro não tão inteligente",
+      "name": "Skarp",
+      "supname": "O Viking Lidimo",
       "attrs": {
         "level": 3,
-        "vida": 4,
-        "vidaMaxima": 12,
-        "sorte": 5,
+        "vida": 10,
+        "vidaMaxima": 11,
+        "sorte": 4,
         "forca": 17,
-        "agilidade": 11,
+        "agilidade": 12,
         "vontade": 9,
-        "inteligencia": 9
+        "inteligencia": 8
       }
     },
     "alater": {
       "name": "Alatar",
-      "supname": "O guerreiro não tão inteligente",
+      "supname": "O Mago Igneo",
       "attrs": {
         "level": 3,
-        "vida": 7,
-        "vidaMaxima": 12,
-        "sorte": 5,
-        "forca": 17,
-        "agilidade": 11,
-        "vontade": 9,
-        "inteligencia": 9
+        "vida": 13,
+        "vidaMaxima": 13,
+        "sorte": 4,
+        "forca": 9,
+        "agilidade": 9,
+        "vontade": 18,
+        "inteligencia": 15
       }
     },
     "elendil": {
       "name": "Elendil",
-      "supname": "O guerreiro não tão inteligente",
+      "supname": "O Cavaleiro Bastardo",
       "attrs": {
-        "level": 3,
-        "vida": 5,
-        "vidaMaxima": 12,
-        "sorte": 5,
-        "forca": 17,
-        "agilidade": 11,
-        "vontade": 9,
-        "inteligencia": 9
+        "level": 2,
+        "vida": 9,
+        "vidaMaxima": 15,
+        "sorte": 0,
+        "forca": 13,
+        "agilidade": 8,
+        "vontade": 12,
+        "inteligencia": 11
       }
     },
     "lucky": {
       "name": "Lucky",
-      "supname": "O guerreiro não tão inteligente",
+      "supname": "Os Punhu dos Deuses",
       "attrs": {
         "level": 3,
-        "vida": 7,
-        "vidaMaxima": 12,
-        "sorte": 5,
-        "forca": 17,
-        "agilidade": 11,
-        "vontade": 9,
-        "inteligencia": 9
+        "vida": 0,
+        "vidaMaxima": 13,
+        "sorte": 6,
+        "forca": 11,
+        "agilidade": 15,
+        "vontade": 7,
+        "inteligencia": 12
       }
     }
   },
-  "sessions": [
-    {
-      "id": "h6YlNH4nyXAHK0ujAAAS",
-      "charId": "rudy"
-    }
-  ],
+  "sessions": [],
   "charKeyRotation": {
-    "123": "rudy"
+    "1707": "skarp",
+    "rudyy": "rudy",
+    "sortudinho": "lucky",
+    "daniel": "elendil",
+    "alatauro": "alater"
   },
-  "masterKey": "master-secret-key",
+  "masterKey": "tuzao-mestre-manerao",
   "rolls": [
     {
-      "charId": "skarp",
+      "charId": "lucky",
       "dices": [
         {
-          "limit": "20"
+          "limit": "30"
         }
       ],
-      "rollId": "qxAGxqX77"
+      "rollId": "Nuj2OwrXf"
+    },
+    {
+      "charId": "elendil",
+      "dices": [
+        {
+          "limit": "18"
+        }
+      ],
+      "rollId": "ntDlabj3O"
     }
   ]
 }

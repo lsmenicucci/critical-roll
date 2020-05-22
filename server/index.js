@@ -10,6 +10,7 @@ const FileSync = require("lowdb/adapters/FileSync");
 const Character = require("./models/char");
 const Session = require("./models/session");
 const RollQueue = require("./models/rolls");
+const TurnsQueue = require("./models/turns");
 
 // setup db
 const adapter = new FileSync("db.json");
@@ -17,25 +18,30 @@ const db = low(adapter);
 
 db.defaults({
   characters: {},
-  sessions: [],
   charKeyRotation: { "123": "rudy" },
   masterKey: "master-secret-key",
-  rolls: [],
 }).write();
+
+const turns = new TurnsQueue();
+const characters = Character.loadAll(db);
 
 // reset sessions
 db.set("sessions", []).write();
-db.set("rolls", []);
-
-// init row queue
-const rollQueue = new RollQueue(db);
 
 io.on("connection", (client) => {
-  const session = Session.createSession(db, client.id);
+  const session = new Session();
 
   client.on("session.setCharacter", ({ charKey }) => {
+    const currentCharacter = session.setCharacter(db, charKey);
+
+    if (!currentCharacter) {
+      return client.emit("session.invalidCharkey", {
+        message: "Chave de personagem invalida",
+      });
+    }
+
     // load master
-    if (Session.isMaster(db, charKey)) {
+    if (currentCharacter === true) {
       const characters = Character.getAll(db);
       client.emit("session.data", {
         characters,
@@ -48,17 +54,13 @@ io.on("connection", (client) => {
       });
     }
 
-    // load character
-    const loggedChar = Character.loadCharacter(db, charKey);
-
-    if (loggedChar) {
-      const { id: charId } = loggedChar;
+    if (currentCharacter !== null) {
+      const { id: charId } = currentCharacter;
       const characters = Character.getAll(db);
-      session.setCharacter(charId);
+
       client.emit("session.data", {
         charId,
         characters,
-        rolls: rollQueue.getRolls(),
         isMaster: false,
       });
 
@@ -66,39 +68,31 @@ io.on("connection", (client) => {
         who: loggedChar.name,
       });
     }
-    return client.emit("session.invalidCharkey", {
-      message: "Chave de personagem invalida",
-    });
-  });
 
-  client.on("roll.request", ({ charId, dices }) => {
-    console.log("new roll! ", charId, dices);
-    const [newRoll] = rollQueue.addRoll(charId, dices);
-
-    io.emit("roll.new", newRoll);
-  });
-
-  client.on("roll.submit", ({ rollId, dices, charId }) => {
-    rollQueue.submitRoll(rollId);
-    io.emit("roll.submitted", { rollId, dices, charId });
+    // subscribe to events
+    characters.forEach((char) => char.subscribe(client.emit));
+    turns.subscribe(client.emit);
   });
 
   client.on("character.update", ({ charId, newData }) => {
-    const editingChar = new Character(db, charId);
+    const editingChar = characters.find((c) => c.id === charId);
 
     // set new attrs
-    const diff = editingChar.setAttributes(newData);
+    editingChar && editingChar.setAttributes(newData);
+  });
 
-    io.emit("character.updated", {
-      charId,
-      who: editingChar.name,
-      newData,
-      diff,
-    });
+  client.on("turn.request", ({ dices }) => {
+    turns.addTurn({ dices });
+  });
+
+  client.on("turn.diceSubmit", ({ turnId, diceId, value }) => {
+    turns.updateDice(turnId, diceId, value);
   });
 
   client.on("disconnect", () => {
-    Session.clearSession(db, client.id);
+    return io.emit("connection.quit", {
+      who: loggedChar.name,
+    });
   });
 });
-server.listen(3000);
+server.listen(3001);

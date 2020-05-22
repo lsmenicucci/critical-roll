@@ -1,21 +1,40 @@
 // import node reacts
 import React from "react";
-import classNames from "classnames";
+import styled, { css } from "styled-components";
 
-// import styles
-import "../styles/components/progress-bar.scss";
+// import styled variables
+import { colors as themeColors } from "../config/theme";
 
-const ProgressBar = ({ value, outOf, className }) => {
-  const progressStyle = { width: `${(100 * value) / outOf}%` };
+const BarContainer = styled.div`
+  display: inline-flex;
+  width: 100%;
+`;
+
+const ProgressContainer = styled.div`
+  border: 1px ${themeColors.black} solid;
+  border-radius: 4px;
+  display: inline-flex;
+  width: 100%;
+`;
+const Progress = styled.div`
+  border-radius: 4px;
+  display: inline-flex;
+  background-color: ${themeColors.red};
+  transition: width 0.2s ease;
+
+  ${({ percentage }) =>
+    css`
+      width: ${percentage}%;
+    `}
+`;
+
+const ProgressBar = ({ value, outOf, ...props }) => {
   return (
-    <div className={classNames("progress-bar", className)}>
-      <div className="progress-container">
-        <div
-          className={classNames("progress", { dange: value / outOf < 0.2 })}
-          style={progressStyle}
-        ></div>
-      </div>
-    </div>
+    <BarContainer {...props}>
+      <ProgressContainer>
+        <Progress percentage={(100 * value) / outOf} />
+      </ProgressContainer>
+    </BarContainer>
   );
 };
 

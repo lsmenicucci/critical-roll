@@ -1,7 +1,9 @@
 const { updatedDiff } = require("deep-object-diff");
+const shortid = require("shortid");
 
 const CHARS_ROOT = "characters";
 const CHARS_KEYS_ROOT = "charKeyRotation";
+const MASTER_KEY_ROOT = "masterKey";
 
 class Character {
   /**
@@ -12,6 +14,22 @@ class Character {
   constructor(store, charId) {
     this.id = charId;
     this.store = store;
+    this.subscriptions = {};
+  }
+
+  subscribe(cb) {
+    const subId = shortid();
+    this.subscribers[subId] = cb;
+
+    return () => {
+      this.subscribers[subId] = null;
+    };
+  }
+
+  notifyAll(...args) {
+    Object.values(this.subscribers).forEach((cb) => {
+      if (typeof cb === "function") cb(...args);
+    });
   }
 
   get name() {
@@ -32,7 +50,13 @@ class Character {
 
     // update storage
     this.store.get(`${CHARS_ROOT}.${this.id}`).assign(newData).write();
-    return oldNewDiff;
+
+    // notify
+    this.notifyAll("character.updated", {
+      charId: this.id,
+      diff: oldNewDiff,
+      newData,
+    });
   }
 
   get() {
@@ -47,20 +71,18 @@ class Character {
    *
    * @returns {Character}
    */
-  static loadCharacter(store, charKey) {
+  static loadCharacterId(store, charKey) {
+    const isMaster = store.get(MASTER_KEY_ROOT).value() === charKey;
+    if (isMaster) return true;
+
     const charId = store.get(`${CHARS_KEYS_ROOT}.${charKey}`).value();
 
-    // TODO: Clear on production
-    if (charId) {
-      //store.set(`${CHARS_KEYS_ROOT}.${charKey}`).write();
-      return new Character(store, charId);
-    }
-
-    return null;
+    return charId || null;
   }
 
-  static getAll(store) {
-    return store.get(CHARS_ROOT).value();
+  static loadAll(store) {
+    const charIds = Object.keys(store.get(CHARS_ROOT).value());
+    return charIds.map((id) => new Character(store, id));
   }
 }
 

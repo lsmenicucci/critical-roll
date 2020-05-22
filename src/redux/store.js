@@ -1,20 +1,23 @@
+// in the renderer store
+import {
+  forwardToMain,
+  replayActionRenderer,
+  getInitialStateRenderer,
+} from "electron-redux";
+import reducer from "../shared/reducers";
 import { createStore, applyMiddleware, compose } from "redux";
-import createSagaMiddleware from "redux-saga";
-import reducer from "./reducers";
-import saga from "./sagas";
 
-export default function configureStore(initialState) {
-  const sagaMiddleware = createSagaMiddleware();
+// get the initial state from the electron reducer
+const initialState = getInitialStateRenderer();
 
-  const composeEnhancers =
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-  const store = createStore(
-    reducer,
-    initialState,
-    composeEnhancers(applyMiddleware(sagaMiddleware))
-  );
+const store = createStore(
+  reducer,
+  initialState,
+  composeEnhancers(applyMiddleware(forwardToMain))
+);
 
-  sagaMiddleware.run(saga);
-  return store;
-}
+replayActionRenderer(store);
+
+export default store;

@@ -1,10 +1,10 @@
 // import redux & util
-import { combineReducers } from "redux";
-import { createReducer } from "redux-act";
-import dotProp from "dot-prop-immutable";
+const { combineReducers } = require("redux");
+const { createReducer } = require("redux-act");
+const dotProp = require("dot-prop-immutable");
 
 // import local actions
-import * as actions from "./actions";
+const actions = require("./actions");
 
 const initial = {
   connection: {
@@ -14,10 +14,36 @@ const initial = {
     connectionError: false,
     url: "",
   },
-  currentUser: { error: false, loading: false, loaded: false },
-  rolls: [],
+  currentUser: null,
+  session: {},
+  turn: {
+    id: "1234",
+    dices: [
+      { id: "dice-1", type: 20, forWho: "rudy" },
+      { id: "dice-2", type: 20, forWho: "rudy" },
+      { id: "dice-3", type: 20, forWho: "rudy" },
+      { id: "dice-4", type: 20, forWho: "rudy" },
+      { id: "dice-5", type: 20, forWho: "rudy" },
+      { id: "dice-6", type: 20, forWho: "rudy" },
+    ],
+  },
   users: {},
-  characters: {},
+  characters: {
+    rudy: {
+      name: "Rudy",
+      supname: "The green ninja",
+      attrs: {
+        level: 3,
+        vida: 18,
+        vidaMaxima: 19,
+        sorte: 8,
+        forca: 10,
+        agilidade: 12,
+        vontade: 9,
+        inteligencia: 11,
+      },
+    },
+  },
   feed: [],
 };
 
@@ -94,34 +120,25 @@ const characters = createReducer(
   initial.characters
 );
 
-const rolls = createReducer(
+const turn = createReducer(
   {
-    [actions.sessionLoaded]: (rollList, { rolls }) => rolls || [],
-
-    [actions.newRoll]: (rollList, newRoll) => [...rollList, newRoll],
-
-    [actions.updateRoll]: (rollList, { rollId, diceIndex, diceValue }) =>
-      rollList.map((r) => {
-        if (r.rollId !== rollId) return r;
-
-        const newRoll = dotProp.set(r, `dices.${diceIndex}.value`, diceValue);
-        if (newRoll.dices.every((d) => d.value)) newRoll.allRolled = true;
-        return newRoll;
-      }),
-
-    [actions.submitRoll]: (rollList, { rollId }) =>
-      rollList.filter((r) => {
-        console.log(r.rollId, rollId);
-        return r.rollId !== rollId;
-      }),
+    [actions.updateTurn]: (currentTurn, { diceId, value }) => {
+      return (
+        currentTurn &&
+        currentTurn.dices.map((dice) =>
+          dice.id === diceId ? { ...dice, value } : dice
+        )
+      );
+    },
+    [actions.newTurn]: (currentTurn, newTurn) => newTurn,
   },
-  initial.rolls
+  initial.turn
 );
 
-export default combineReducers({
+module.exports = combineReducers({
   feed,
   currentUser,
   characters,
   connection,
-  rolls,
+  turn,
 });

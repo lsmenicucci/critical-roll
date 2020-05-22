@@ -3,8 +3,8 @@
 @import "./animations.scss";
 
 .dashboard-container {
-  width: 100%;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
 }
 
 .master-dashboard {
@@ -15,8 +15,8 @@
   grid-template-areas:
     "actions-card"
     "feed";
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
 
   & > * {
     margin: 1rem;
@@ -104,25 +104,6 @@
     }
   }
 
-  .player-title {
-    align-content: start;
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-
-    .player-name {
-      font-size: 1.25rem;
-      padding: 0 0.5rem;
-    }
-
-    .player-supname {
-      padding: 0 0.5rem;
-      color: $grey-1;
-      font-style: italic;
-      font-size: 1rem;
-      width: 100%;
-    }
-  }
   .save-button {
     align-self: flex-end;
   }

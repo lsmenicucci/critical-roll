@@ -1,6 +1,6 @@
-import io from "socket.io-client";
-import { eventChannel } from "redux-saga";
-import {
+const io = require("socket.io-client");
+const { eventChannel } = require("redux-saga");
+const {
   fork,
   take,
   call,
@@ -8,8 +8,8 @@ import {
   takeLatest,
   all,
   takeEvery,
-} from "redux-saga/effects";
-import * as actions from "../actions";
+} = require("redux-saga/effects");
+const actions = require("../../../src/shared/actions");
 
 let socket;
 
@@ -32,6 +32,7 @@ function connect(url) {
 }
 
 function* connectWatcher() {
+  console.log("Watching for sessions");
   yield takeLatest(actions.connect.getType(), function* ({ payload }) {
     try {
       yield put(actions.connecting());
@@ -58,6 +59,10 @@ function* sessionWatcher() {
       yield put(actions.loadingSession());
       const sessionData = yield call(loadSession, payload.charKey);
       yield put(actions.sessionLoaded(sessionData));
+
+      // controll views
+      yield put(actions.openView({ name: "attrs" }));
+      yield put(actions.closeView({ name: "login" }));
     } catch (error) {
       yield put(actions.sessionError());
     }
@@ -82,12 +87,16 @@ function loadSession(charKey) {
 
 function setupEvents() {
   return eventChannel((emit) => {
-    socket.on("roll.new", ({ dices, charId, rollId }) => {
-      emit(actions.newRoll({ dices, charId, rollId }));
+    socket.on("turn.new", (turnData) => {
+      emit(actions.newTurn(turnData));
     });
 
-    socket.on("roll.submitted", ({ dices, charId }) => {
-      emit(actions.newEvent({ type: "roll", who: charId, content: { dices } }));
+    socket.on("turn.update", ({ dices, charId }) => {
+      emit(actions.newEvent({ type: "roll", content: { dices, who: charId } }));
+    });
+
+    socket.on("turn.dice", (diceUpdate) => {
+      emit(actions.updateDice(diceUpdate));
     });
 
     socket.on("connection.new", ({ who }) => {
@@ -147,6 +156,6 @@ function* connectionFlow() {
   }
 }
 
-export default function* rootSaga() {
+module.exports = function* rootSaga() {
   yield all([connectWatcher(), sessionWatcher()]);
-}
+};

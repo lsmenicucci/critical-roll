@@ -5,13 +5,13 @@
 }
 
 @font-face {
-  font-family: "Monogram";
-  src: local("Monogram"), url("../assets/fonts/monogram.ttf");
+  font-family: "yoster";
+  src: local("yoster"), url("../assets/fonts/yoster.ttf");
 }
 
 * {
   text-rendering: geometricPrecision;
-  font-family: "Monogram";
+  font-family: "yoster";
   font-size: 32px;
   color: #242923;
 }
