@@ -21,9 +21,11 @@ export default styled.button`
   padding: 5px 10px;
   border: 0;
   border-radius: ${themeVariables.layout.borderRadius};
-  background-color: ${themeVariables.colors.black};
+  background-color: ${({ light }) =>
+    light ? themeVariables.colors.whiteTwo : themeVariables.colors.black};
   outline: 0;
-  color: ${themeVariables.colors.whiteOne};
+  color: ${({ red }) =>
+    (red && themeVariables.colors.red) || themeVariables.colors.whiteOne};
   font-family: ${themeVariables.font.family};
   font-size: 18px;
   transition: transform 240ms cubic-bezier(0.175, 0.885, 0.32, 1.275),

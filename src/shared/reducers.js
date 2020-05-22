@@ -14,7 +14,7 @@ const initial = {
     connectionError: false,
     url: "",
   },
-  currentUser: null,
+  currentUser: { charId: "rudy" },
   session: {},
   turn: {
     id: "1234",

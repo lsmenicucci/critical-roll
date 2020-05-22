@@ -1,6 +1,5 @@
 // import react
 import React, { useState } from "react";
-import { Provider } from "react-redux";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -9,26 +8,24 @@ import styled from "styled-components";
 import theme from "./config/theme";
 
 // import components
-import StageComponent from "./components/Stage/index";
+import CurrentAction from "./components/Roll/Feed";
+import RollView from "./components/Roll";
+import StageComponent from "./components/Stage";
 import Button from "./components/Buttons/Normal";
-
-// import views
-import DetailsView from "./views/Details";
+import TabButton from "./components/Buttons/Tab";
 
 // import styles
 import "./styles/fonts.css";
 import GlobalStyle from "./styles/global";
 
-// import redux store
-import store from "./redux/store";
-
 const MainContainer = styled.div`
-  background-color: ${theme.colors.purple};
+  background-color: ${theme.colors.purpleOne};
   border-radius: ${theme.layout.borderRadius};
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   padding: 16px;
   width: 100vw;
   height: 100%;
@@ -44,88 +41,51 @@ const PageDragHeader = styled.div`
   -webkit-app-region: drag;
 `;
 
-const MainMenu = styled.div`
-  display: flex;
-  align-items: center;
-  align-content: center;
-  flex-wrap: wrap;
-  width: 50%;
-  height: 50%;
-`;
-
-const MenuButtonContainer = styled(Link)`
-  width: 46%;
-  height: 30%;
-  margin: 5px;
-`;
-
-const MenuButtonComponent = styled(Button)`
-  height: 100%;
-  width: 100%;
-`;
-
-const MenuButton = ({ children, ...props }) => (
-  <MenuButtonContainer {...props}>
-    <MenuButtonComponent>{children}</MenuButtonComponent>
-  </MenuButtonContainer>
-);
-
 const Stage = styled(StageComponent)`
   border-radius: ${theme.layout.borderRadius};
-  height: 50%;
   width: 100%;
-`;
-
-const ActionCenter = styled.div`
-  align-items: center;
-  box-sizing: border-box;
-  font-family: ${theme.font.family};
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  width: 50%;
-  padding: 8px;
+  height: 100%;
 `;
 
 const ViewContainer = styled.div`
   width: 100%;
-  height: 50%;
+  height: 100%;
   box-sizing: border-box;
+  padding: 0 16px;
 `;
 
 export default () => {
-  const [focusedChar, setFocusedChar] = useState(null);
-
   return (
-    <Provider store={store}>
+    <React.Fragment>
       <GlobalStyle />
       <Router>
         <MainContainer>
           <PageDragHeader />
-          <Switch>
-            <Route path="/inventory">
-              Não implementado :c
-              <Link to="/">Voltar</Link>
-            </Route>
-            <Route path="/details">
-              <ViewContainer>
-                <DetailsView charId={focusedChar} />
-              </ViewContainer>
-            </Route>
-            <Route path="/">
-              <MainMenu>
-                <MenuButton to="/inventory">Inventário</MenuButton>
-                <MenuButton to="/details">Equipe</MenuButton>
-                <MenuButton>Magias</MenuButton>
-                <MenuButton>Histórico</MenuButton>
-              </MainMenu>
-              <ActionCenter>Não ta pegando nada por enquanto</ActionCenter>
-            </Route>
-          </Switch>
-
-          <Stage onCharacterSelect={setFocusedChar}></Stage>
+          <Stage
+            actionView={
+              <Switch>
+                <Route path="/inventory">
+                  Não implementado :c
+                  <Link to="/">Voltar</Link>
+                </Route>
+                <Route path="/details">
+                  <ViewContainer></ViewContainer>
+                </Route>
+                <Route path="/roll">
+                  <ViewContainer>
+                    <RollView />
+                  </ViewContainer>
+                </Route>
+                <Route path="/">
+                  <ViewContainer>
+                    <CurrentAction />
+                  </ViewContainer>
+                </Route>
+              </Switch>
+            }
+          />
         </MainContainer>
       </Router>
-    </Provider>
+    </React.Fragment>
   );
 };

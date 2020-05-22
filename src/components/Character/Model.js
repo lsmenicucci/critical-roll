@@ -17,6 +17,7 @@ const ShortInfo = styled.div`
   background-color: ${themeVariables.colors.black};
   border-radius: ${themeVariables.layout.borderRadius};
   font-family: ${themeVariables.font.family};
+  font-size: 12px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
