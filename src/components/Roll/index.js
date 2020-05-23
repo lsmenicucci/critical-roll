@@ -33,6 +33,11 @@ const Dice = styled(DiceComponent)`
   margin-bottom: 8px;
 `;
 
+const StartButton = styled(Button)`
+  font-size: 14px;
+  padding: 2px 8px;
+`;
+
 export default (props) => {
   const [hasAccepted, setAccepted] = useState(false);
 
@@ -76,9 +81,9 @@ export default (props) => {
             ))}
         </DicesContainer>
       ) : (
-        <Button light red onClick={() => setAccepted(true)}>
+        <StartButton light red onClick={() => setAccepted(true)}>
           Rolar!
-        </Button>
+        </StartButton>
       )}
     </ViewWindow>
   );
