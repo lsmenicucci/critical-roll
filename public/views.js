@@ -13,6 +13,7 @@ module.exports = (frameName) => {
     width: windowSpec.width,
     height: windowSpec.height,
     frame: false,
+    resizable: false,
     transparent: true,
     webPreferences: {
       nodeIntegration: true,

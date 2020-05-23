@@ -32,31 +32,25 @@ class UpdateWindow {
   }
 
   setupUpdatesEvents(onReadyCallback) {
-    console.log("setting up events");
     autoUpdater.on("checking-for-update", () => {
-      this.sendStatusToWindow("Checking for update...");
+      this.sendStatusToWindow("Checando atualizações...");
     });
     autoUpdater.on("update-available", (info) => {
-      this.sendStatusToWindow("Update available.");
+      this.sendStatusToWindow("Uma atualização está disponível!");
     });
     autoUpdater.on("update-not-available", (info) => {
-      this.sendStatusToWindow("This is the last version!");
+      this.sendStatusToWindow("Tudo atualizado :)");
 
       typeof onReadyCallback === "function" && onReadyCallback();
     });
     autoUpdater.on("error", (err) => {
-      this.sendStatusToWindow("Error in auto-updater. " + err);
+      this.sendStatusToWindow("Falha na atualização :c");
     });
     autoUpdater.on("download-progress", (progressObj) => {
-      let log_message = "Download speed: " + progressObj.bytesPerSecond;
-      log_message = log_message + " - Downloaded " + progressObj.percent + "%";
-      log_message =
-        log_message +
-        " (" +
-        progressObj.transferred +
-        "/" +
-        progressObj.total +
-        ")";
+      log_message = `Baixando o update... (${Math.round(
+        progressObj.percent
+      )}%) `;
+
       this.sendStatusToWindow(log_message);
     });
     autoUpdater.on("update-downloaded", (info) => {
