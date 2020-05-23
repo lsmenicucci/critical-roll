@@ -47,11 +47,9 @@ class UpdateWindow {
       this.sendStatusToWindow("Falha na atualização :c");
     });
     autoUpdater.on("download-progress", (progressObj) => {
-      log_message = `Baixando o update... (${Math.round(
-        progressObj.percent
-      )}%) `;
-
-      this.sendStatusToWindow(log_message);
+      this.sendStatusToWindow(
+        `Baixando o update... (${Math.round(progressObj.percent)}%) `
+      );
     });
     autoUpdater.on("update-downloaded", (info) => {
       this.sendStatusToWindow("Update downloaded");
