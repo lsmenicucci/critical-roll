@@ -14,36 +14,10 @@ const initial = {
     connectionError: false,
     url: "",
   },
-  currentUser: { charId: "rudy" },
   session: {},
-  turn: {
-    id: "1234",
-    dices: [
-      { id: "dice-1", type: 20, forWho: "rudy" },
-      { id: "dice-2", type: 20, forWho: "rudy" },
-      { id: "dice-3", type: 20, forWho: "rudy" },
-      { id: "dice-4", type: 20, forWho: "rudy" },
-      { id: "dice-5", type: 20, forWho: "rudy" },
-      { id: "dice-6", type: 20, forWho: "rudy" },
-    ],
-  },
+  turn: null,
   users: {},
-  characters: {
-    rudy: {
-      name: "Rudy",
-      supname: "The green ninja",
-      attrs: {
-        level: 3,
-        vida: 18,
-        vidaMaxima: 19,
-        sorte: 8,
-        forca: 10,
-        agilidade: 12,
-        vontade: 9,
-        inteligencia: 11,
-      },
-    },
-  },
+  characters: {},
   feed: [],
 };
 
@@ -78,7 +52,7 @@ const connection = createReducer(
   initial.connection
 );
 
-const currentUser = createReducer(
+const session = createReducer(
   {
     [actions.sessionLoaded]: (state, { charId, isMaster }) => ({
       ...state,
@@ -88,18 +62,18 @@ const currentUser = createReducer(
       error: false,
       loading: false,
     }),
-    [actions.sessionError]: (currentUser, _) => ({
-      ...currentUser,
+    [actions.sessionError]: (session, _) => ({
+      ...session,
       loading: false,
       error: true,
     }),
-    [actions.loadingSession]: (currentUser, _) => ({
-      ...currentUser,
+    [actions.loadingSession]: (session, _) => ({
+      ...session,
       loading: true,
       error: false,
     }),
   },
-  initial.currentUser
+  initial.session
 );
 
 const feed = createReducer(
@@ -131,13 +105,21 @@ const turn = createReducer(
       );
     },
     [actions.newTurn]: (currentTurn, newTurn) => newTurn,
+    [actions.updateDice]: (currentTurn, { dice }) =>
+      (currentTurn && {
+        ...currentTurn,
+        dices:
+          currentTurn &&
+          currentTurn.dices.map((d) => (d.id === dice.id ? dice : d)),
+      }) ||
+      null,
   },
   initial.turn
 );
 
 module.exports = combineReducers({
   feed,
-  currentUser,
+  session,
   characters,
   connection,
   turn,

@@ -1,5 +1,5 @@
 // import rect modules
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useSpring } from "react-spring";
@@ -8,18 +8,9 @@ import { useSpring } from "react-spring";
 import theme from "../../config/theme";
 
 // import local components
+import ViewWindow from "../Frames/View";
 import Button from "../Buttons/Normal";
 import DiceComponent from "./RollingDice";
-
-const RollAction = styled.div`
-  background: ${theme.colors.red};
-  border-radius: ${theme.layout.borderRadius};
-  box-sizing: border-box;
-  color: ${theme.colors.whiteOne};
-  display: flex;
-  flex-wrap: wrap;
-  padding: 8px;
-`;
 
 const RollActionTitle = styled.span`
   width: 100%;
@@ -30,6 +21,7 @@ const RollActionTitle = styled.span`
 
 const DicesContainer = styled.div`
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
   width: 100%;
   overflow-y: auto;
@@ -42,21 +34,23 @@ const Dice = styled(DiceComponent)`
 
 export default (props) => {
   const [hasAccepted, setAccepted] = useState(false);
-  const [hasSubmited, setSubmited] = useState(false);
 
   // redux hooks
-  const [turn, currentUser] = useSelector((state) => [
-    state.turn,
-    state.currentUser,
-  ]);
+  const [turn, session] = useSelector((state) => [state.turn, state.session]);
   const thisCharDices =
     turn &&
     turn.dices &&
-    currentUser &&
-    turn.dices.filter((d) => d.forWho === currentUser.charId);
+    session &&
+    turn.dices.filter((d) => d.forWho === session.charId);
+
+  useEffect(() => {
+    if (thisCharDices && thisCharDices.some((d) => d.value !== undefined)) {
+      setAccepted(true);
+    }
+  }, [thisCharDices]);
 
   return (
-    <RollAction {...props}>
+    <ViewWindow red {...props}>
       <RollActionTitle>
         {hasAccepted ? "Rolando..." : "Voce tem dados a rolar!"}
       </RollActionTitle>
@@ -64,7 +58,7 @@ export default (props) => {
         <DicesContainer>
           {thisCharDices &&
             thisCharDices.map((dice) => (
-              <Dice diceId={dice.id} key={dice.id} />
+              <Dice active diceId={dice.id} key={dice.id} />
             ))}
         </DicesContainer>
       ) : (
@@ -72,6 +66,6 @@ export default (props) => {
           Rolar!
         </Button>
       )}
-    </RollAction>
+    </ViewWindow>
   );
 };

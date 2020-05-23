@@ -1,7 +1,8 @@
 // import react stuff
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 // import theme variables
 import { colors as themeColors } from "../../config/theme";
@@ -11,7 +12,7 @@ import actions from "../../shared/actions";
 
 // import local components
 import TextField from "../Form/TextField";
-import Button from "../Form/Button";
+import Button from "../Buttons/Normal";
 import Spinner from "../Form/Spinner";
 
 const LoginFormContainer = styled.form`
@@ -35,12 +36,21 @@ const ErrorMessage = styled.span`
   font-size: 0.75rem;
 `;
 
-const LoginForm = ({ connection, currentUser, dispatch }) => {
+export default () => {
   const [formData, setFormData] = useState({
-    url: connection.url,
+    url: "",
     charKey: "",
   });
 
+  // redux hooks
+  const [connection, session] = useSelector((state) => [
+    state.connection,
+    state.session,
+  ]);
+
+  const dispatch = useDispatch();
+
+  // handle form change
   const handleFormChange = ({ target }) => {
     return setFormData({
       ...formData,
@@ -48,6 +58,7 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
     });
   };
 
+  // submit form
   const submitForm = (event) => {
     event.preventDefault();
     if (connection.connected) {
@@ -56,6 +67,10 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
       dispatch(actions.connect({ url: formData.url }));
     }
   };
+
+  if (session.charId || session.isMaster) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <LoginFormContainer onSubmit={submitForm}>
@@ -79,9 +94,9 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
       )}
       <SubmitButton
         onClick={submitForm}
-        disabled={connection.conneting || currentUser.loading}
+        disabled={connection.conneting || (session && session.loading)}
       >
-        {connection.conneting || currentUser.loading
+        {connection.conneting || (session && session.loading)
           ? "Carregando..."
           : connection.connected
           ? "Carregar personagem"
@@ -92,7 +107,7 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
       ) : (
         ""
       )}
-      {currentUser.error ? (
+      {session && session.error ? (
         <ErrorMessage>Chave de personagem invalida</ErrorMessage>
       ) : (
         ""
@@ -100,10 +115,3 @@ const LoginForm = ({ connection, currentUser, dispatch }) => {
     </LoginFormContainer>
   );
 };
-
-const stateToProps = ({ connection, currentUser }) => ({
-  connection,
-  currentUser,
-});
-
-export default connect(stateToProps)(LoginForm);

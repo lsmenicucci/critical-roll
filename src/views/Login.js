@@ -2,16 +2,13 @@
 import React from "react";
 import styled from "styled-components";
 
-// import frame specs
-import { login as loginWindowData } from "../shared/frames";
-
 // import local components
-import LoginForm from "../components/Card/LoginForm";
+import LoginForm from "../components/Forms/LoginForm";
 import Frame from "../components/Frame";
 
 const LoginFrame = styled(Frame)`
-  width: ${`${loginWindowData.width}px`};
-  height: ${`${loginWindowData.height}px`};
+  width: 100%;
+  height: 100%;
 `;
 
 const FormWrap = styled.div`
@@ -22,12 +19,9 @@ const FormWrap = styled.div`
 `;
 
 export default () => {
-  document.title = loginWindowData.title;
   return (
-    <LoginFrame title="O inicio da jornada" dragabble>
-      <FormWrap>
-        <LoginForm />
-      </FormWrap>
-    </LoginFrame>
+    <FormWrap>
+      <LoginForm />
+    </FormWrap>
   );
 };

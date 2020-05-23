@@ -9,7 +9,6 @@ const FileSync = require("lowdb/adapters/FileSync");
 // import models
 const Character = require("./models/char");
 const Session = require("./models/session");
-const RollQueue = require("./models/rolls");
 const TurnsQueue = require("./models/turns");
 
 // setup db
@@ -31,6 +30,12 @@ db.set("sessions", []).write();
 io.on("connection", (client) => {
   const session = new Session();
 
+  // subscribe to events
+  characters.forEach((char) =>
+    char.subscribe((event, payload) => client.emit(event, payload))
+  );
+  turns.subscribe((event, payload) => client.emit(event, payload));
+
   client.on("session.setCharacter", ({ charKey }) => {
     const currentCharacter = session.setCharacter(db, charKey);
 
@@ -42,36 +47,34 @@ io.on("connection", (client) => {
 
     // load master
     if (currentCharacter === true) {
-      const characters = Character.getAll(db);
       client.emit("session.data", {
-        characters,
+        characters: characters.reduce(
+          (acc, c) => ({ ...acc, [c.id]: c.get() }),
+          {}
+        ),
         isMaster: true,
         charId: null,
       });
 
-      return io.emit("connection.new", {
+      io.emit("connection.new", {
         who: "O Mestre",
       });
-    }
-
-    if (currentCharacter !== null) {
+    } else if (currentCharacter !== null) {
       const { id: charId } = currentCharacter;
-      const characters = Character.getAll(db);
 
       client.emit("session.data", {
         charId,
-        characters,
+        characters: characters.reduce(
+          (acc, c) => ({ ...acc, [c.id]: c.get() }),
+          {}
+        ),
         isMaster: false,
       });
 
-      return io.emit("connection.new", {
-        who: loggedChar.name,
+      io.emit("connection.new", {
+        who: currentCharacter.name,
       });
     }
-
-    // subscribe to events
-    characters.forEach((char) => char.subscribe(client.emit));
-    turns.subscribe(client.emit);
   });
 
   client.on("character.update", ({ charId, newData }) => {
@@ -91,8 +94,10 @@ io.on("connection", (client) => {
 
   client.on("disconnect", () => {
     return io.emit("connection.quit", {
-      who: loggedChar.name,
+      who: session.character && session.character.name,
     });
   });
 });
+
+console.log("http://localhost:3001");
 server.listen(3001);

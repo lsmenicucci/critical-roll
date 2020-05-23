@@ -7,8 +7,8 @@ class Session {
   }
 
   setCharacter(db, charKey) {
-    this.charId = Character.loadCharacterId(db, charKey);
-    return this.charId;
+    this.character = Character.loadCharacter(db, charKey);
+    return this.character;
   }
 }
 

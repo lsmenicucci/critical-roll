@@ -43,6 +43,7 @@ const LifeBar = styled(ProgressBar)`
 `;
 
 export default ({ data, ...parms }) => {
+  console.log(data);
   return (
     <ModelContainer {...parms}>
       <img src={SampleChar} />

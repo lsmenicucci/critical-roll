@@ -1,6 +1,6 @@
 // import react
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -8,11 +8,12 @@ import styled from "styled-components";
 import theme from "./config/theme";
 
 // import components
+import LoginPage from "./views/Login";
 import CurrentAction from "./components/Roll/Feed";
+import RollRequestView from "./components/Roll/Requester";
 import RollView from "./components/Roll";
 import StageComponent from "./components/Stage";
-import Button from "./components/Buttons/Normal";
-import TabButton from "./components/Buttons/Tab";
+import NavbarComponent from "./components/Navigation/Tabs";
 
 // import styles
 import "./styles/fonts.css";
@@ -23,8 +24,8 @@ const MainContainer = styled.div`
   border-radius: ${theme.layout.borderRadius};
   box-sizing: border-box;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-content: flex-start;
   justify-content: center;
   padding: 16px;
   width: 100vw;
@@ -42,48 +43,88 @@ const PageDragHeader = styled.div`
 `;
 
 const Stage = styled(StageComponent)`
-  border-radius: ${theme.layout.borderRadius};
+  border-radius: 0 0 ${theme.layout.borderRadius} ${theme.layout.borderRadius};
   width: 100%;
-  height: 100%;
+  flex: 1;
+`;
+
+const Navbar = styled(NavbarComponent)`
+  border-radius: ${theme.layout.borderRadius} ${theme.layout.borderRadius} 0 0;
 `;
 
 const ViewContainer = styled.div`
   width: 100%;
-  height: 100%;
   box-sizing: border-box;
-  padding: 0 16px;
+  display: flex;
+  flex-grow: 1;
 `;
 
 export default () => {
+  const [turn, session, characters] = useSelector((rootState) => [
+    rootState.turn,
+    rootState.session,
+    rootState.characters,
+  ]);
+
+  const thisCharDices =
+    turn &&
+    turn.dices &&
+    session &&
+    turn.dices.filter((d) => d.forWho === session.charId);
+
+  // set tab options
+  const navOptions = [
+    { children: "Inv", to: "/inventory" },
+    { children: "ReqRoll", to: "/rollRequest" },
+  ];
+  if (thisCharDices && thisCharDices.length > 0) {
+    navOptions.push({ children: "Roll", to: "/roll" });
+  }
   return (
     <React.Fragment>
       <GlobalStyle />
+      <PageDragHeader />
       <Router>
         <MainContainer>
-          <PageDragHeader />
-          <Stage
-            actionView={
-              <Switch>
-                <Route path="/inventory">
-                  Não implementado :c
-                  <Link to="/">Voltar</Link>
-                </Route>
-                <Route path="/details">
-                  <ViewContainer></ViewContainer>
-                </Route>
-                <Route path="/roll">
-                  <ViewContainer>
-                    <RollView />
-                  </ViewContainer>
-                </Route>
-                <Route path="/">
-                  <ViewContainer>
-                    <CurrentAction />
-                  </ViewContainer>
-                </Route>
-              </Switch>
-            }
-          />
+          <Switch>
+            <Route path="/login"></Route>
+            <Route path="/">
+              <Navbar options={navOptions} />
+            </Route>
+          </Switch>
+          <ViewContainer>
+            <Switch>
+              <Route path="/login">
+                <LoginPage />
+              </Route>
+              <Route path="/rollRequest">
+                <RollRequestView />
+              </Route>
+              <Route path="/">
+                <Stage
+                  actionView={
+                    <Switch>
+                      <Route path="/inventory">
+                        Não implementado :c
+                        <Link to="/">Voltar</Link>
+                      </Route>
+                      <Route path="/roll">
+                        <ViewContainer>
+                          <RollView />
+                        </ViewContainer>
+                      </Route>
+
+                      <Route path="/">
+                        <ViewContainer>
+                          <CurrentAction />
+                        </ViewContainer>
+                      </Route>
+                    </Switch>
+                  }
+                />
+              </Route>
+            </Switch>
+          </ViewContainer>
         </MainContainer>
       </Router>
     </React.Fragment>

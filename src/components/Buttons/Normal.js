@@ -21,20 +21,27 @@ export default styled.button`
   padding: 5px 10px;
   border: 0;
   border-radius: ${themeVariables.layout.borderRadius};
-  background-color: ${({ light }) =>
-    light ? themeVariables.colors.whiteTwo : themeVariables.colors.black};
+  background-color: ${({ light, blue }) =>
+    light
+      ? themeVariables.colors.whiteTwo
+      : (blue && themeVariables.colors.blueOne) || themeVariables.colors.black};
   outline: 0;
-  color: ${({ red }) =>
-    (red && themeVariables.colors.red) || themeVariables.colors.whiteOne};
+  color: ${({ light, red, blue }) =>
+    (light && red && themeVariables.colors.red) ||
+    (light && blue && themeVariables.colors.blueOne) ||
+    themeVariables.colors.whiteOne};
   font-family: ${themeVariables.font.family};
   font-size: 18px;
   transition: transform 240ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
     border-bottom 240ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
+  &:disabled {
+    background-color: ${themeVariables.colors.greyOne};
+  }
   &:active {
     transform: scale(0.95);
   }
-  &:hover {
+  &:enabled:hover {
     transform: scale(1.05);
   }
 `;

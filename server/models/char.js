@@ -14,7 +14,7 @@ class Character {
   constructor(store, charId) {
     this.id = charId;
     this.store = store;
-    this.subscriptions = {};
+    this.subscribers = {};
   }
 
   subscribe(cb) {
@@ -71,13 +71,13 @@ class Character {
    *
    * @returns {Character}
    */
-  static loadCharacterId(store, charKey) {
+  static loadCharacter(store, charKey) {
     const isMaster = store.get(MASTER_KEY_ROOT).value() === charKey;
     if (isMaster) return true;
 
     const charId = store.get(`${CHARS_KEYS_ROOT}.${charKey}`).value();
 
-    return charId || null;
+    return charId ? new Character(store, charId) : null;
   }
 
   static loadAll(store) {

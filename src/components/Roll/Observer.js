@@ -7,17 +7,8 @@ import { useSelector } from "react-redux";
 import theme from "../../config/theme";
 
 // local components
+import ViewWindow from "../Frames/View";
 import DiceComponent from "./Dice";
-
-const PlayerRollAction = styled.div`
-  background: ${theme.colors.blueOne};
-  border-radius: ${theme.layout.borderRadius};
-  box-sizing: border-box;
-  color: ${theme.colors.whiteOne};
-  display: flex;
-  flex-wrap: wrap;
-  padding: 8px;
-`;
 
 const RollActionTitle = styled.span`
   width: 100%;
@@ -29,6 +20,7 @@ const RollActionTitle = styled.span`
 const DicesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   width: 100%;
   overflow-y: auto;
 `;
@@ -50,7 +42,7 @@ export default ({ charId, ...props }) => {
     turn && turn.dices && turn.dices.filter((dice) => dice.forWho === charId);
 
   return (
-    <PlayerRollAction {...props}>
+    <ViewWindow blue {...props}>
       <RollActionTitle>{charName} is rolling...</RollActionTitle>
       <DicesContainer>
         {thisCharDices &&
@@ -58,6 +50,6 @@ export default ({ charId, ...props }) => {
             <Dice type={dice.type} key={dice.id} value={dice.value} />
           ))}
       </DicesContainer>
-    </PlayerRollAction>
+    </ViewWindow>
   );
 };

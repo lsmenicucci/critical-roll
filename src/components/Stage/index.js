@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { Redirect, useLocation } from "react-router-dom";
 
 // import local components
 import CharacterModelComponent from "../Character/Model";
-import Navbar from "../Navigation/Tabs";
 
 // import theme variables
 import theme from "../../config/theme";
@@ -28,10 +28,16 @@ const CharactersView = styled.div`
   padding: 4px 16px;
 `;
 
+const FullView = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
 const ActionView = styled.div`
   display: flex;
   flex: 1;
   width: 40%;
+  padding: 16px;
 `;
 
 const CharacterModel = styled(CharacterModelComponent)`
@@ -40,37 +46,34 @@ const CharacterModel = styled(CharacterModelComponent)`
   margin-left: 10px;
 `;
 
-export default ({ actionView, onCharacterSelect, ...props }) => {
+export default ({ mainView, actionView, onCharacterSelect, ...props }) => {
   const [focusedChar, setFocusedChar] = useState(null);
-  const [turn, currentUser, characters] = useSelector((rootState) => [
+  const [turn, session, characters] = useSelector((rootState) => [
     rootState.turn,
-    rootState.currentUser,
+    rootState.session,
     rootState.characters,
   ]);
 
   const thisCharDices =
     turn &&
     turn.dices &&
-    currentUser &&
-    turn.dices.filter((d) => d.forWho === currentUser.charId);
+    session &&
+    turn.dices.filter((d) => d.forWho === session.charId);
 
-  console.log(turn.dices, currentUser.charId);
-  // set tab options
-  const navOptions = [{ children: "Inv", to: "/inventory" }];
-  if (thisCharDices && thisCharDices.length > 0) {
-    navOptions.push({ children: "Roll", to: "/roll" });
+  if (!session.charId && !session.isMaster) {
+    return <Redirect to="/login" />;
   }
 
   return (
     <StageContainer {...props}>
-      <Navbar options={navOptions} />
       <ActionView>{actionView}</ActionView>
       <CharactersView>
         {Object.entries(characters || {}).map(([charId, data]) => {
           return (
             <CharacterModel
               data={data}
-              onClick={() => setFocusedChar(charId)}
+              hidden={focusedChar && charId !== focusedChar}
+              onClick={() => setFocusedChar((!focusedChar && charId) || null)}
             />
           );
         })}

@@ -21,7 +21,8 @@ function connect(url) {
       resolve(socket);
     });
 
-    socket.on("connect_error", () => {
+    socket.on("connect_error", (err) => {
+      console.log(err);
       reject(false);
     });
 
@@ -32,7 +33,6 @@ function connect(url) {
 }
 
 function* connectWatcher() {
-  console.log("Watching for sessions");
   yield takeLatest(actions.connect.getType(), function* ({ payload }) {
     try {
       yield put(actions.connecting());
@@ -42,9 +42,9 @@ function* connectWatcher() {
 
       // watch for further actions
       yield all([
-        rollSubmitWatcher(),
         characterUpdateSubmit(),
         rollRequestWatcher(),
+        diceSubmitWatcher(),
       ]);
     } catch (error) {
       yield put(actions.connectionError({ message: error }));
@@ -59,10 +59,6 @@ function* sessionWatcher() {
       yield put(actions.loadingSession());
       const sessionData = yield call(loadSession, payload.charKey);
       yield put(actions.sessionLoaded(sessionData));
-
-      // controll views
-      yield put(actions.openView({ name: "attrs" }));
-      yield put(actions.closeView({ name: "login" }));
     } catch (error) {
       yield put(actions.sessionError());
     }
@@ -77,7 +73,6 @@ function loadSession(charKey) {
     });
 
     socket.on("session.invalidCharkey", ({ message }) => {
-      console.log("eru");
       rej(new Error(message));
     });
 
@@ -96,6 +91,7 @@ function setupEvents() {
     });
 
     socket.on("turn.dice", (diceUpdate) => {
+      console.log(diceUpdate);
       emit(actions.updateDice(diceUpdate));
     });
 
@@ -122,15 +118,15 @@ function* readSocket() {
   }
 }
 
-function* rollSubmitWatcher() {
-  yield takeEvery(`${actions.submitRoll}`, function* ({ payload }) {
-    socket.emit("roll.submit", payload.roll);
+function* diceSubmitWatcher() {
+  yield takeEvery(`${actions.submitDice}`, function* ({ payload }) {
+    socket.emit("turn.diceSubmit", payload);
   });
 }
 
 function* rollRequestWatcher() {
-  yield takeEvery(`${actions.requestRoll}`, function* ({ payload }) {
-    socket.emit("roll.request", payload);
+  yield takeEvery(`${actions.requestTurn}`, function* ({ payload }) {
+    socket.emit("turn.request", payload);
   });
 }
 
@@ -138,21 +134,6 @@ function* characterUpdateSubmit() {
   while (true) {
     const { payload } = yield take([`${actions.updateCharacter}`]);
     socket.emit("character.update", payload);
-  }
-}
-
-function* connectionFlow() {
-  while (true) {
-    const connectData = take(`${actions.connect}`);
-
-    yield call(connect, connectData.url);
-
-    let currentUser;
-    try {
-      currentUser = yield call(loadSession, socket, "123");
-    } catch (error) {
-      console.log(":c error");
-    }
   }
 }
 

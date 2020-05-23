@@ -18,6 +18,7 @@ module.exports = (frameName) => {
       nodeIntegration: true,
     },
   });
+  windowObject.setAlwaysOnTop(true);
   windowObject.loadURL(
     isDev
       ? `http://localhost:3000`
@@ -28,7 +29,6 @@ module.exports = (frameName) => {
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
     windowObject.webContents.openDevTools();
   }
-  windowObject.on("closed", () => (mainWindow = null));
 
   return windowObject;
 };

@@ -5,11 +5,13 @@ import styled from "styled-components";
 import {
   colors as themeColors,
   layout as themeLayout,
+  font,
 } from "../../config/theme";
 
 const TextField = styled.input`
-  padding: 0.1rem 0.2rem;
-  border: 0.1rem solid ${themeColors.greyOne};
+  padding: 8px;
+  border: 2px solid ${themeColors.greyOne};
+  font-family: ${font.family};
   border-radius: ${themeLayout.borderRadius};
   background-color: ${themeColors.whiteOne};
   outline: 0;

@@ -24,7 +24,7 @@ class Turns {
   addTurn({ dices }) {
     const rolls = dices.map((dice) => ({ ...dice, id: shortid() }));
     const newTurn = { dices: rolls, id: shortid() };
-    this.turns.push();
+    this.turns.push(newTurn);
 
     // notify
     this.notifyAll("turn.new", newTurn);
@@ -36,7 +36,7 @@ class Turns {
       this.turns[turnIndex] &&
       this.turns[turnIndex].dices.findIndex((d) => d.id === diceId);
 
-    if (diceIndex) {
+    if (diceIndex > -1 && !this.turns[turnIndex].dices[diceIndex].value) {
       this.turns[turnIndex].dices[diceIndex].value = value;
 
       // notify

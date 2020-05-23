@@ -11,15 +11,18 @@ import TabButton from "../Buttons/Tab";
 
 const TabContainer = styled.div`
   display: flex;
-  width: 100%;
-  flex-wrap: wrap;
+  background-color: ${theme.colors.whiteTwo};
+  box-sizing: border-box;
   font-family: ${theme.font};
+  flex-wrap: wrap;
+  height: 46px;
   padding: 8px;
+  width: 100%;
 `;
 
 const TabsBar = styled.nav`
   display: flex;
-  height: 30px;
+  height: 100%;
   width: 100%;
   align-items: flex-start;
 `;
@@ -30,11 +33,11 @@ const TabLink = styled(Link)`
   margin-right: 8px;
 `;
 
-export default ({ options }) => {
+export default ({ options, ...props }) => {
   const location = useLocation();
 
   return (
-    <TabContainer>
+    <TabContainer {...props}>
       <TabsBar>
         {options &&
           options.map((props) => (

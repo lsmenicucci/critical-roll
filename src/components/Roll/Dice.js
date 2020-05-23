@@ -6,10 +6,13 @@ import styled from "styled-components";
 import theme from "../../config/theme";
 
 const DiceContainer = styled.div`
+  align-items: center;
   display: flex;
   border-radius: ${theme.layout.borderRadius};
   background: ${theme.colors.whiteOne};
   color: ${({ active }) => (active ? theme.colors.red : theme.colors.blueOne)};
+  border: 1.2px
+    ${({ active }) => (active ? theme.colors.red : theme.colors.blueOne)} solid;
   padding: 2px;
   font-family: ${theme.font.family};
   font-size: 12px;
@@ -27,11 +30,30 @@ const DiceValue = styled.span`
   width: 24px;
 `;
 
-export default ({ type, value, ...props }) => {
+const DiceInput = styled.input`
+  outline: 0;
+  background: transparent;
+  font-family: ${theme.font.family};
+  color: ${({ active }) => (active ? theme.colors.red : theme.colors.blueOne)};
+  border: 0;
+  width: 40px;
+`;
+
+export default ({ type, value, editable, onEdit, ...props }) => {
+  const handleChange = (evt) => onEdit && onEdit(evt.target.value);
+
   return (
     <DiceContainer {...props}>
-      <DiceValue active={props.active}>{value || "??"}</DiceValue>
-      {type && `d${type}`}
+      {editable ? (
+        <React.Fragment>
+          d<DiceInput type="number" onChange={handleChange} min={0} />
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <DiceValue active={props.active}>{value || "??"}</DiceValue>
+          {type && `d${type}`}
+        </React.Fragment>
+      )}
     </DiceContainer>
   );
 };
