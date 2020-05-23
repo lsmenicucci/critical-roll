@@ -8,4 +8,10 @@ export default createGlobalStyle`
         width:100vw;
         overflow:hidden;
     }
+    *{
+        -webkit-user-select: none;
+        user-select: none;
+        user-drag: none; 
+        -webkit-user-drag: none;
+    }
 `;

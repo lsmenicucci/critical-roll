@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 // icons
-import { faDiceD6, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faDiceD6, faPlus, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // import theme variables
@@ -84,12 +84,24 @@ export default () => {
     {
       children: (
         <React.Fragment>
+          <FontAwesomeIcon icon={faHome} />
+        </React.Fragment>
+      ),
+      to: "/",
+    },
+  ];
+
+  if (session.isMaster) {
+    navOptions.push({
+      children: (
+        <React.Fragment>
           <FontAwesomeIcon icon={faPlus} />
         </React.Fragment>
       ),
       to: "/rollRequest",
-    },
-  ];
+    });
+  }
+
   if (thisCharDices && thisCharDices.length > 0) {
     navOptions.push({
       children: <FontAwesomeIcon icon={faDiceD6} />,

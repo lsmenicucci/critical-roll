@@ -14,7 +14,7 @@ import DiceComponent from "./RollingDice";
 
 const RollActionTitle = styled.span`
   width: 100%;
-  font-size: 16px;
+  font-size: 14px;
   font-family: ${theme.font.family};
   margin-bottom: 8px;
 `;
@@ -24,6 +24,7 @@ const DicesContainer = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
   width: 100%;
+  max-height: 50px;
   overflow-y: auto;
 `;
 
@@ -55,6 +56,10 @@ export default (props) => {
       setAccepted(true);
     }
   }, [thisCharDices]);
+
+  useEffect(() => {
+    setAccepted(false);
+  }, [turn.id]);
 
   return (
     <ViewWindow red {...props}>

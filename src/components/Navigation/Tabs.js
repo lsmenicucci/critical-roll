@@ -31,6 +31,7 @@ const TabLink = styled(Link)`
   display: flex;
   text-decoration: none;
   margin-right: 8px;
+  -webkit-user-select: none;
 `;
 
 export default ({ options, ...props }) => {
