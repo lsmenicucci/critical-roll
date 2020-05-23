@@ -3,7 +3,7 @@ const isDev = require("electron-is-dev");
 const path = require("path");
 
 // import windows specs
-const windowSpecs = require("../src/shared/frames");
+const windowSpecs = require("./frames");
 
 module.exports = (frameName) => {
   if (!windowSpecs[frameName]) return;

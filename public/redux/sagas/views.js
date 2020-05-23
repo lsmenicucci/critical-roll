@@ -1,5 +1,5 @@
 const { takeLatest, all } = require("redux-saga/effects");
-const actions = require("../../../src/shared/actions");
+const actions = require("../actions");
 
 // import local sagas
 const createView = require("../../views");

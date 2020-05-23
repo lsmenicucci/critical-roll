@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #59546C;
+            color: #fefbe8;
+        }
+
+        #messages {
+            box-sizing: border-box;
+            display: flex;
+            overflow-y: auto;
+            width: 100%;
+            height: 100%;
+            padding: 8px 16px;
+        }
+
+        #version {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            color: #888887;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="version"></p>
+    <p id="message"></p>
+    <script>
+        // Display the current version
+        const $message = document.getElementById('message')
+        const $version = document.getElementById('version');
+
+        // set version
+        $version.innerText = window.location.hash.substring(1);
+
+        // Listen for messages
+        const { ipcRenderer } = require('electron');
+        ipcRenderer.on('message', function (event, text) {
+            $message.innerHTML = text;
+        })
+    </script>
+</body>
+
+</html>

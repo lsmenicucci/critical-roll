@@ -1,15 +1,26 @@
 {
-  "name": "rpgzauro",
+  "name": "criticalroll",
   "description": "A non-comercial app used for helping remotly playing RPG with friends",
   "author": {
     "name": "Lucas Menicucci",
     "email": "lucamenimeni@gmail.com"
   },
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": true,
   "main": "public/electron.js",
+  "homepage": "./",
   "build": {
-    "appId": "com.lsmeni.rpgzauro"
+    "appId": "com.github.lsmenicucci.criticalroll",
+    "productName": "Critical Roll",
+    "win": {
+      "publish": [
+        "github"
+      ]
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ]
   },
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -27,7 +38,6 @@
     "electron-redux": "^1.5.1",
     "electron-updater": "^4.3.1",
     "i": "^0.3.6",
-    "node-sass": "^4.14.0",
     "npm": "^6.14.4",
     "polished": "^3.6.3",
     "react": "^16.13.1",
@@ -43,7 +53,8 @@
     "redux-logger": "^3.0.6",
     "redux-saga": "^1.1.3",
     "socket.io-client": "^2.3.0",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "typescript": "^3.9.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -55,8 +66,9 @@
     "dev-electron-react": "cross-env BROWSER=none npm run start",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "npm build",
+    "electron-pack": "electron-builder build -w"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -84,7 +96,6 @@
     "cross-env": "^7.0.2",
     "electron": "^8.2.3",
     "electron-builder": "^22.6.1",
-    "electron-devtools-installer": "^3.0.0",
     "wait-on": "^4.0.1"
   }
 }

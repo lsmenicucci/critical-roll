@@ -118,10 +118,18 @@ const turn = createReducer(
   initial.turn
 );
 
-export default combineReducers({
+module.exports = combineReducers({
   feed,
   session,
   characters,
   connection,
   turn,
 });
+
+// export default combineReducers({
+//   feed,
+//   session,
+//   characters,
+//   connection,
+//   turn,
+// });

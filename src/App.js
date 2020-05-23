@@ -79,6 +79,9 @@ export default () => {
         d.forWho === session.charId || (d.forWho === true && session.isMaster)
     );
 
+  // set title
+  document.title = "Critical Roll!";
+
   // set tab options
   const navOptions = [
     {

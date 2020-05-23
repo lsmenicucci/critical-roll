@@ -6,7 +6,7 @@ const {
 } = require("electron-redux");
 const { createStore, applyMiddleware, compose } = require("redux");
 const createSagaMiddleware = require("redux-saga").default;
-const reducer = require("../../src/shared/reducers");
+const reducer = require("./reducers");
 const saga = require("./sagas");
 
 module.exports = (appWindows) => {
