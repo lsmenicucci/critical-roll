@@ -76,7 +76,7 @@ const Dice = styled(DiceComponent)`
 `;
 
 export default (props) => {
-  const [dices, setDices] = useState([{ forWho: "rudy" }]);
+  const [dices, setDices] = useState([]);
   const [characters, turn] = useSelector((state) => [
     state.characters,
     state.turn,
@@ -94,9 +94,10 @@ export default (props) => {
     setDices(dices.map((d, k) => (k === diceKey ? { ...d, type } : d)));
 
   const submitRoll = () => {
-    console.log(dices);
-    const validDices = dices.filter((d) => d.type && d.type < 99 && d.type > 0);
-    console.log(validDices);
+    const validDices = dices
+      .filter((d) => d.type && d.type < 99 && d.type > 0)
+      .map((d) => (d.forWho === "master" ? { ...d, forWho: true } : d));
+
     if (validDices.length > 0) {
       dispatch(actions.requestTurn({ dices: validDices }));
     }
@@ -105,31 +106,37 @@ export default (props) => {
   return (
     <ViewConainer {...props}>
       <CharacterList>
-        {Object.entries(characters || {}).map(([charId, charData]) => (
-          <CharacterDicesContainer blue>
-            <DiceRequesterHeader>
-              {charData.name}
-              <AddButton light blue onClick={() => addDice(charId)}>
-                <FontAwesomeIcon size="xs" icon={faPlus} />
-              </AddButton>
-            </DiceRequesterHeader>
-            <CharacterDices>
-              {dices.map((dice, k) =>
-                dice.forWho === charId ? (
-                  <Dice
-                    editable
-                    onEdit={(v) => editDice(k, v)}
-                    onAuxClick={() => removeDice(k)}
-                  />
-                ) : (
-                  ""
-                )
-              )}
-            </CharacterDices>
-          </CharacterDicesContainer>
-        ))}
+        {Object.entries({ ...characters, master: { name: "Master" } }).map(
+          ([charId, charData]) => (
+            <CharacterDicesContainer blue>
+              <DiceRequesterHeader>
+                {charData.name}
+                <AddButton light blue onClick={() => addDice(charId)}>
+                  <FontAwesomeIcon size="xs" icon={faPlus} />
+                </AddButton>
+              </DiceRequesterHeader>
+              <CharacterDices>
+                {dices.map((dice, k) =>
+                  dice.forWho === charId ? (
+                    <Dice
+                      editable
+                      onEdit={(v) => editDice(k, v)}
+                      onAuxClick={() => removeDice(k)}
+                    />
+                  ) : (
+                    ""
+                  )
+                )}
+              </CharacterDices>
+            </CharacterDicesContainer>
+          )
+        )}
       </CharacterList>
-      <Button blue onClick={submitRoll} disabled={turn}>
+      <Button
+        blue
+        onClick={submitRoll}
+        disabled={turn && turn.dices.some((d) => d.value === undefined)}
+      >
         <FontAwesomeIcon icon={faPaperPlane} />
       </Button>
     </ViewConainer>

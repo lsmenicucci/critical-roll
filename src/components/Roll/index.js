@@ -37,11 +37,18 @@ export default (props) => {
 
   // redux hooks
   const [turn, session] = useSelector((state) => [state.turn, state.session]);
+
   const thisCharDices =
     turn &&
     turn.dices &&
     session &&
-    turn.dices.filter((d) => d.forWho === session.charId);
+    turn.dices.filter(
+      (d) =>
+        d.forWho === session.charId || (d.forWho === true && session.isMaster)
+    );
+
+  const hasFinished =
+    thisCharDices && thisCharDices.every((dice) => dice.value !== undefined);
 
   useEffect(() => {
     if (thisCharDices && thisCharDices.some((d) => d.value !== undefined)) {
@@ -52,7 +59,9 @@ export default (props) => {
   return (
     <ViewWindow red {...props}>
       <RollActionTitle>
-        {hasAccepted ? "Rolando..." : "Voce tem dados a rolar!"}
+        {(hasFinished && "Dados rolados") ||
+          (hasAccepted && "Rolando...") ||
+          "Voce tem dados a rolar!"}
       </RollActionTitle>
       {hasAccepted ? (
         <DicesContainer>

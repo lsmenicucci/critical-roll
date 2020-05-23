@@ -20,15 +20,19 @@ export default styled.button`
   cursor: pointer;
   padding: 5px 10px;
   border: 0;
+  outline: 0;
   border-radius: ${themeVariables.layout.borderRadius};
-  background-color: ${({ light, blue }) =>
+  background-color: ${({ light, blue, purple }) =>
     light
       ? themeVariables.colors.whiteTwo
-      : (blue && themeVariables.colors.blueOne) || themeVariables.colors.black};
-  outline: 0;
-  color: ${({ light, red, blue }) =>
+      : (blue && themeVariables.colors.blueOne) ||
+        (purple && themeVariables.colors.purpleOne) ||
+        themeVariables.colors.black};
+  color: ${({ light, red, blue, purple }) =>
     (light && red && themeVariables.colors.red) ||
     (light && blue && themeVariables.colors.blueOne) ||
+    (light && purple && themeVariables.colors.purpleOne) ||
+    (purple && themeVariables.colors.black) ||
     themeVariables.colors.whiteOne};
   font-family: ${themeVariables.font.family};
   font-size: 18px;

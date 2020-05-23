@@ -4,8 +4,14 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { Redirect, useLocation } from "react-router-dom";
 
+// icons
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 // import local components
 import CharacterModelComponent from "../Character/Model";
+import CharacterDetailsComponent from "../Character/Details";
+import Button from "../Buttons/Normal";
 
 // import theme variables
 import theme from "../../config/theme";
@@ -46,6 +52,16 @@ const CharacterModel = styled(CharacterModelComponent)`
   margin-left: 10px;
 `;
 
+const CharacterDetails = styled(CharacterDetailsComponent)`
+  min-width: 300px;
+  flex: 0;
+  margin: 8px;
+`;
+
+const BackButton = styled(Button)`
+  margin: 8px 0;
+`;
+
 export default ({ mainView, actionView, onCharacterSelect, ...props }) => {
   const [focusedChar, setFocusedChar] = useState(null);
   const [turn, session, characters] = useSelector((rootState) => [
@@ -73,10 +89,18 @@ export default ({ mainView, actionView, onCharacterSelect, ...props }) => {
             <CharacterModel
               data={data}
               hidden={focusedChar && charId !== focusedChar}
-              onClick={() => setFocusedChar((!focusedChar && charId) || null)}
+              onClick={() => setFocusedChar(charId)}
             />
           );
         })}
+        {focusedChar && (
+          <React.Fragment>
+            <CharacterDetails charId={focusedChar} />
+            <BackButton purple onClick={() => setFocusedChar(null)}>
+              <FontAwesomeIcon icon={faAngleRight} />
+            </BackButton>
+          </React.Fragment>
+        )}
       </CharactersView>
     </StageContainer>
   );

@@ -96,6 +96,7 @@ const characters = createReducer(
 
 const turn = createReducer(
   {
+    [actions.sessionLoaded]: (_, { turn }) => turn,
     [actions.updateTurn]: (currentTurn, { diceId, value }) => {
       return (
         currentTurn &&

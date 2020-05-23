@@ -131,10 +131,9 @@ function* rollRequestWatcher() {
 }
 
 function* characterUpdateSubmit() {
-  while (true) {
-    const { payload } = yield take([`${actions.updateCharacter}`]);
+  yield takeEvery(`${actions.updateCharacter}`, function* ({ payload }) {
     socket.emit("character.update", payload);
-  }
+  });
 }
 
 module.exports = function* rootSaga() {

@@ -21,13 +21,24 @@ class Turns {
     });
   }
 
+  clearFinishedTurns() {
+    this.turns = this.turns.filter((turn) =>
+      turn.dices.some((dice) => dice.value === undefined)
+    );
+  }
+
   addTurn({ dices }) {
     const rolls = dices.map((dice) => ({ ...dice, id: shortid() }));
     const newTurn = { dices: rolls, id: shortid() };
     this.turns.push(newTurn);
 
+    this.clearFinishedTurns();
     // notify
     this.notifyAll("turn.new", newTurn);
+  }
+
+  getLast() {
+    return this.turns[this.turns.length - 1];
   }
 
   updateDice(turnId, diceId, value) {

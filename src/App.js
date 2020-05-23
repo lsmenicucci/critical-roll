@@ -4,6 +4,10 @@ import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
+// icons
+import { faDiceD6, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 // import theme variables
 import theme from "./config/theme";
 
@@ -70,15 +74,27 @@ export default () => {
     turn &&
     turn.dices &&
     session &&
-    turn.dices.filter((d) => d.forWho === session.charId);
+    turn.dices.filter(
+      (d) =>
+        d.forWho === session.charId || (d.forWho === true && session.isMaster)
+    );
 
   // set tab options
   const navOptions = [
-    { children: "Inv", to: "/inventory" },
-    { children: "ReqRoll", to: "/rollRequest" },
+    {
+      children: (
+        <React.Fragment>
+          <FontAwesomeIcon icon={faPlus} />
+        </React.Fragment>
+      ),
+      to: "/rollRequest",
+    },
   ];
   if (thisCharDices && thisCharDices.length > 0) {
-    navOptions.push({ children: "Roll", to: "/roll" });
+    navOptions.push({
+      children: <FontAwesomeIcon icon={faDiceD6} />,
+      to: "/roll",
+    });
   }
   return (
     <React.Fragment>
@@ -104,10 +120,6 @@ export default () => {
                 <Stage
                   actionView={
                     <Switch>
-                      <Route path="/inventory">
-                        Não implementado :c
-                        <Link to="/">Voltar</Link>
-                      </Route>
                       <Route path="/roll">
                         <ViewContainer>
                           <RollView />

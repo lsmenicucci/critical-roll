@@ -52,6 +52,7 @@ io.on("connection", (client) => {
           (acc, c) => ({ ...acc, [c.id]: c.get() }),
           {}
         ),
+        turn: turns.getLast() || null,
         isMaster: true,
         charId: null,
       });
@@ -68,6 +69,7 @@ io.on("connection", (client) => {
           (acc, c) => ({ ...acc, [c.id]: c.get() }),
           {}
         ),
+        turn: turns.getLast() || null,
         isMaster: false,
       });
 

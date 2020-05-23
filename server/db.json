@@ -5,7 +5,7 @@
       "supname": "The green ninja",
       "attrs": {
         "level": 3,
-        "vida": 18,
+        "vida": 12,
         "vidaMaxima": 19,
         "sorte": 8,
         "forca": 10,
@@ -61,7 +61,7 @@
       "supname": "Os Punhu dos Deuses",
       "attrs": {
         "level": 3,
-        "vida": 0,
+        "vida": 13,
         "vidaMaxima": 13,
         "sorte": 6,
         "forca": 11,

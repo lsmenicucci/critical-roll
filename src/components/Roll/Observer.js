@@ -41,9 +41,16 @@ export default ({ charId, ...props }) => {
   const thisCharDices =
     turn && turn.dices && turn.dices.filter((dice) => dice.forWho === charId);
 
+  const hasFinished =
+    thisCharDices && thisCharDices.every((dice) => dice.value !== undefined);
+
   return (
     <ViewWindow blue {...props}>
-      <RollActionTitle>{charName} is rolling...</RollActionTitle>
+      <RollActionTitle>
+        {hasFinished
+          ? `${charName} rolou estes dados`
+          : `${charName} esta rolando...`}
+      </RollActionTitle>
       <DicesContainer>
         {thisCharDices &&
           thisCharDices.map((dice) => (

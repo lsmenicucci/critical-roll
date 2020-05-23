@@ -17,6 +17,7 @@ import Spinner from "../Form/Spinner";
 
 const LoginFormContainer = styled.form`
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   width: 300px;
   transition: height 0.5s ease;
