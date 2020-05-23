@@ -5,7 +5,7 @@
     "name": "Lucas Menicucci",
     "email": "lucamenimeni@gmail.com"
   },
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
@@ -68,8 +68,7 @@
     "build-storybook": "build-storybook -s public",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "npm build",
-    "electron-pack": "npm run build && electron-builder build -w",
-    "release": "build"
+    "electron-pack": "npm run build && electron-builder build -w"
   },
   "eslintConfig": {
     "extends": "react-app"

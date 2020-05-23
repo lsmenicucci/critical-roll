@@ -31,14 +31,14 @@
         #version {
             position: absolute;
             bottom: 0.5px;
-            left: 2px;
+            left: 0.5px;
             color: #888887;
         }
     </style>
 </head>
 
 <body>
-    Critical Hit - <span id="version"></span>
+    <span id="version"></span>
     <div id="message"></div>
     <script>
         // Display the current version
@@ -46,7 +46,7 @@
         const $version = document.getElementById('version');
 
         // set version
-        $version.innerText = window.location.hash.substring(1);
+        $version.innerText = `Critical Hit - ${window.location.hash.substring(1)}`;
 
         // Listen for messages
         const { ipcRenderer } = require('electron');
